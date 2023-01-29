@@ -1,15 +1,15 @@
 import "./App.css";
 import React from "react";
+import Navbar from "./Nav";
 
 /* Main */
-class App extends React() {
+class App extends React.PureComponent {
 	constructor(props) {
 		super(props);
 
 		/* Changeable */
 		this.state = {};
 		
-		/* Static */
 		/* Refs */
 	}
 	
@@ -19,6 +19,8 @@ class App extends React() {
 	render() {
 		return (
 			<div className="App">
+				<Navbar />
+				<main></main>
 			</div>
 		);
 	}
