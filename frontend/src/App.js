@@ -3,6 +3,7 @@ import React from "react";
 import Navbar from "./Nav";
 import ScaledImage from "./ScaledImage";
 import Icon from "./Icon";
+import Collections from "./Collections";
 
 /* Main */
 class App extends React.PureComponent {
@@ -11,7 +12,7 @@ class App extends React.PureComponent {
 
 		/* Changeable */
 		this.state = {
-			blurPercentage: 0,
+			scrollPercentage: 0.0,
 			showImage: {
 				active: false,
 				info: {
@@ -26,47 +27,48 @@ class App extends React.PureComponent {
 		/* Refs */
 		this.main = React.createRef();
 		this.imageShow = React.createRef();
+		this.scrollToSection = React.createRef();
 
 		/* Static */
 		this.images = [
 			{
-				src: "https://static01.nyt.com/images/2020/12/21/travel/21travel-sweden-11/21travel-sweden-11-superJumbo.jpg?quality=75&auto=webp",
+				src: require("./assets/images/favorites/Lingonberries.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
 			},
 			{
-				src: "https://static01.nyt.com/images/2020/12/21/travel/21travel-sweden-27/21travel-sweden-27-superJumbo.jpg?quality=75&auto=webp",
+				src: require("./assets/images/favorites/ForestWoman.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
 			},
 			{
-				src: "https://static01.nyt.com/images/2020/12/21/travel/21travel-sweden-03/21travel-sweden-03-superJumbo.jpg?quality=75&auto=webp",
+				src: require("./assets/images/favorites/Hayfield.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
 			},
 			{
-				src: "https://static01.nyt.com/images/2020/12/21/travel/21travel-sweden-30/21travel-sweden-30-superJumbo.jpg?quality=75&auto=webp",
+				src: require("./assets/images/favorites/Bee.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
 			},
 			{
-				src: "https://static01.nyt.com/images/2020/12/21/travel/21travel-sweden-31/21travel-sweden-31-superJumbo.jpg?quality=75&auto=webp",
+				src: require("./assets/images/favorites/SkyOcean.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
 			},
 			{
-				src: "https://static01.nyt.com/images/2020/12/21/travel/21travel-sweden-29/21travel-sweden-29-superJumbo.jpg?quality=75&auto=webp",
+				src: require("./assets/images/favorites/SkyOceanRain.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
 			},
 			{
-				src: "https://static01.nyt.com/images/2020/12/21/travel/21travel-sweden-26/21travel-sweden-26-superJumbo.jpg?quality=75&auto=webp",
+				src: require("./assets/images/favorites/Toadstool.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
@@ -76,7 +78,7 @@ class App extends React.PureComponent {
 
 	componentDidMount() {
 		this.main !== null && this.main.current.addEventListener("scroll", (e) => {
-			this.setState({ blurPercentage: Math.min(e.target.scrollTop / window.innerHeight, 1) });
+			this.setState({ scrollPercentage: Math.min(e.target.scrollTop / window.innerHeight, 1) });
 		})
 
 		/* Remove active if click item not have className="TARGETABLE" */
@@ -122,24 +124,30 @@ class App extends React.PureComponent {
 			}
 		})
 	}
+	scrollDown = () => {
+		this.scrollToSection.current.scrollIntoView({ behavior: "smooth" });
+	}
 
 	render() {
 		return (
 			<div>
 				<Navbar />
-				<h1 style={{ marginLeft: this.state.blurPercentage * 85 + "%" }} className="title">
+				<h1 style={{
+					marginLeft: this.state.scrollPercentage * 45 + "%",
+					opacity: 1 - this.state.scrollPercentage
+				}} className="title">
 					Hugo Sjögren
 				</h1>
 				<main ref={this.main}>
 
 					{/* Only show if not completly dark */}
 					{
-						this.state.blurPercentage < 1 ?
+						this.state.scrollPercentage < 1 ?
 							<ScaledImage
-								blur={this.state.blurPercentage * 10}
-								brightness={100 - this.state.blurPercentage * 100}
+								blur={this.state.scrollPercentage * 10}
+								brightness={100 - this.state.scrollPercentage * 100}
 								className={"fixed"}
-								source={"https://static01.nyt.com/images/2020/12/21/travel/21travel-sweden-03/21travel-sweden-03-superJumbo.jpg?quality=75&auto=webp"}
+								source={require("./assets/images/favorites/SnowHouse.JPG")}
 							/> : null
 					}
 
@@ -148,16 +156,28 @@ class App extends React.PureComponent {
 
 					{/* Play intro animation upon visibility */}
 					{
-						this.state.blurPercentage >= 1 ?
+						this.state.scrollPercentage >= 1 ?
 							<MainView
 								triggerImageSelect={this.triggerImageSelect}
 								images={this.images}
 								showImageActive={this.state.showImage.active}
 							/>
-							: <section></section>
+							: <section ref={this.scrollToSection}></section>
 					}
+
+					{/* Collections section */}
+					<Collections scroll={this.state.scrollPercentage} />
 				</main>
 
+				{/* Chevron down */}
+				<Icon
+					onClick={this.scrollDown}
+					className="chevron-down"
+					icon="chevron-down"
+					size={80}
+				/>
+
+				{/* On image click */}
 				{ this.state.showImage.active ? <div className="image-show-background" ref={this.imageShow}>
 					<div className="TARGETABLE container">
 						<Icon className="close" size={24} icon="x" onClick={this.closeShowImage} />
@@ -222,7 +242,7 @@ class MainView extends React.PureComponent {
 		})
 		this.intervalId = setInterval(() => {
 			if (this.state.autoScroll && !this.state.isResizing && !this.props.showImageActive) {
-				this.gallery.current.scrollLeft += 1;
+				this.gallery.current.scrollLeft += 2;
 			}
 		}, 10);
 	}

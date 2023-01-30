@@ -13,7 +13,7 @@ export default class Navbar extends React.PureComponent {
     render() {
         return (
             <nav>
-                <a className="link" href="/about">Om mig</a>
+                {/* <a className="link" href="/about">Om mig</a> */}
                 {/* <a className="link" href="/contact">Kontakt</a>
                 <a className="link" href="/help">Hjälp</a> */}
             </nav>
