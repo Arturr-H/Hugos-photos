@@ -32,43 +32,43 @@ class App extends React.PureComponent {
 		/* Static */
 		this.images = [
 			{
-				src: require("./assets/images/favorites/Lingonberries.JPG"),
+				src: require("./assets/images/compressed/Lingonberries.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
 			},
 			{
-				src: require("./assets/images/favorites/ForestWoman.JPG"),
+				src: require("./assets/images/compressed/ForestWoman.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
 			},
 			{
-				src: require("./assets/images/favorites/Hayfield.JPG"),
+				src: require("./assets/images/compressed/Hayfield.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
 			},
 			{
-				src: require("./assets/images/favorites/Bee.JPG"),
+				src: require("./assets/images/compressed/Bee.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
 			},
 			{
-				src: require("./assets/images/favorites/SkyOcean.JPG"),
+				src: require("./assets/images/compressed/SkyOcean.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
 			},
 			{
-				src: require("./assets/images/favorites/SkyOceanRain.JPG"),
+				src: require("./assets/images/compressed/SkyOceanRain.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
 			},
 			{
-				src: require("./assets/images/favorites/Toadstool.JPG"),
+				src: require("./assets/images/compressed/Toadstool.JPG"),
 				ort: "Dalarna",
 				datum: "12/06/22",
 				kamera: "Nikon 123xp6"
@@ -147,7 +147,7 @@ class App extends React.PureComponent {
 								blur={this.state.scrollPercentage * 10}
 								brightness={100 - this.state.scrollPercentage * 100}
 								className={"fixed"}
-								source={require("./assets/images/favorites/SnowHouse.JPG")}
+								source={require("./assets/images/default/SnowHouse.JPG")}
 							/> : null
 					}
 

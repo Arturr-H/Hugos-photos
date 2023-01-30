@@ -29,14 +29,12 @@ html, body {
 }main::-webkit-scrollbar { 
     display: none;  /* Safari and Chrome */
 }
-
 /* Scrolling section */
 section {
 	width: 100%;
 	height: 100vh;
 	overflow: hidden;
 	position: relative;
-
 	scroll-snap-align: start;
 }section.animated {
 	animation: intro-section 1s forwards cubic-bezier(0.27, 0.45, 0.55, 0.99);
@@ -281,17 +279,84 @@ h1.title {
 }
 
 /* Collections */
+.collection-section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 
-h1.colllections-title {
+	height: 100%;
+	background: #fff;
+
+	box-sizing: border-box;
+	padding-bottom: 5rem;
+}.collections {
 	width: 100%;
-	height: 5rem;
+	height: 100%;
 
+	/* background: #fff; */
+	display: grid;
+	grid-template-areas:
+		"a1 a1 a2 a4 a4"
+		"a5 a6 a6 a4 a4"
+		"a5 a7 a7 a8 a3";
+
+	gap: 0.2rem;
+}.collections > .area {
+	width: 100%;
+	height: 100%;
+
+	/* background: blue; */
 	display: flex;
 	justify-content: center;
-	align-items: center;
+		align-items: center;
+}
+.collections > .a1 { grid-area: a1; }
+.collections > .a2 { grid-area: a2; }
+.collections > .a3 { grid-area: a3; }
+.collections > .a4 { grid-area: a4; }
+.collections > .a5 { grid-area: a5; }
+.collections > .a6 { grid-area: a6; }
+.collections > .a7 { grid-area: a7; }
+.collections > .a8 { grid-area: a8; }
+.collections > .a9 { grid-area: a9; }
+h1.collections-title {
 	font-size: 2rem;
 	font-weight: 300;
-	color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
+}
+
+/* Collection images */
+.cover-image-container {
+	width: 11rem;
+	height: 14rem;
+	border-radius: 0.75rem;
+
+	background: white;
+	position: relative;
+
+	box-sizing: border-box;
+	padding: 0.5rem;
+
+	box-shadow: 0 0 1rem rgba(0, 0, 0, 0.31);
+}.cover-image-container > .pin {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	transform: translateX(-45%) translateY(-1.5rem);
+	width: 2rem;
+	height: 2rem;
+}.cover-image-container > .cover-image {
+	width: 100%;
+	aspect-ratio: 1;
+	border-radius: 0.25rem;
+
+	object-fit: cover;
+}.cover-image-container > p {
+	font-size: 1rem;
+	color: rgb(180, 180, 180);
+
+	padding: 0;
+	margin: 0;
 }
 
 /* Media queries */
