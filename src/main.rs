@@ -3,6 +3,7 @@ use actix_web::{ App, HttpServer, web };
 
 /* Modules */
 mod routes;
+mod appdata;
 
 /* Main */
 #[actix_web::main]
