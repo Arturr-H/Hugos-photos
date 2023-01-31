@@ -133,8 +133,10 @@ class App extends React.PureComponent {
 			<div>
 				<Navbar />
 				<h1 style={{
-					marginLeft: this.state.scrollPercentage * 45 + "%",
-					opacity: 1 - this.state.scrollPercentage
+					transform: "translateX(-50%) translateY(" +  ((-50) - this.state.scrollPercentage*-76) + "%)",
+					top: (50 - this.state.scrollPercentage*50) + "%",
+					fontSize: Math.max(250 - (this.state.scrollPercentage * 400), 100),
+					letterSpacing: this.state.scrollPercentage * 10
 				}} className="title">
 					Hugo Sjögren
 				</h1>

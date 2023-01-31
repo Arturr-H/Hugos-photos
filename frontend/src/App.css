@@ -89,7 +89,7 @@ nav {
 h1.title {
 	left: 50%;
 	top: 50%;
-	transform: translate(-50%, -50%);
+	transform: translateX(-50%) translateY(-50%);
 
 	position: absolute;
 	font-size: 10rem;
@@ -300,7 +300,8 @@ h1.title {
 		"a5 a6 a6 a4 a4"
 		"a5 a7 a7 a8 a3";
 
-	gap: 0.2rem;
+	gap: 2rem;
+	box-sizing: border-box;
 }.collections > .area {
 	width: 100%;
 	height: 100%;
@@ -326,37 +327,10 @@ h1.collections-title {
 }
 
 /* Collection images */
-.cover-image-container {
-	width: 11rem;
-	height: 14rem;
-	border-radius: 0.75rem;
-
-	background: white;
-	position: relative;
-
-	box-sizing: border-box;
-	padding: 0.5rem;
-
-	box-shadow: 0 0 1rem rgba(0, 0, 0, 0.31);
-}.cover-image-container > .pin {
-	position: absolute;
-	left: 50%;
-	top: 0;
-	transform: translateX(-45%) translateY(-1.5rem);
-	width: 2rem;
-	height: 2rem;
-}.cover-image-container > .cover-image {
+.cover-image {
 	width: 100%;
-	aspect-ratio: 1;
-	border-radius: 0.25rem;
-
+	height: 100%;
 	object-fit: cover;
-}.cover-image-container > p {
-	font-size: 1rem;
-	color: rgb(180, 180, 180);
-
-	padding: 0;
-	margin: 0;
 }
 
 /* Media queries */

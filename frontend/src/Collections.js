@@ -40,12 +40,7 @@ class CoverImage extends React.PureComponent {
 
     render() {
         return (
-            <div style={{ transform: "rotate(" + this.randomRotation + "deg)" }} className="cover-image-container">
-                <img className="pin" src={require("./assets/icons/pin.png")} />
-
                 <img className="cover-image" src={require("./assets/images/compressed/Bee.JPG")} />
-                <p>Sunsets</p>
-            </div>
         )
     }
 }
