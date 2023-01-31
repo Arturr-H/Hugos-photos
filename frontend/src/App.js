@@ -90,7 +90,7 @@ class App extends React.PureComponent {
 	}
 	componentWillUnmount() { }
 	closeShowImage = () => {
-		this.imageShow.current.animate([
+		this.imageShow.current && this.imageShow.current.animate([
 			{ opacity: 1 },
 			{ opacity: 0 }
 		], {
@@ -128,10 +128,18 @@ class App extends React.PureComponent {
 		this.scrollToSection.current.scrollIntoView({ behavior: "smooth" });
 	}
 
+	/* Darkmode */
+	onToggleDarkmode = (to) => {
+		/* Set css variable */
+		document.documentElement.style.setProperty("--main", to ? "#000" : "#fff");
+		document.documentElement.style.setProperty("--inverted", to ? "#fff" : "#000");
+
+	}
+
 	render() {
 		return (
-			<div>
-				<Navbar />
+			<div className="background">
+				<Navbar onToggleDarkmode={this.onToggleDarkmode} />
 				<h1 style={{
 					transform: "translateX(-50%) translateY(" +  ((-50) - this.state.scrollPercentage*-76) + "%)",
 					top: (50 - this.state.scrollPercentage*50) + "%",
@@ -236,7 +244,6 @@ class MainView extends React.PureComponent {
 		/* Scroll evts */
 		this.gallery.current.scrollLeft = window.innerWidth*1.5 + 11;
 		this.gallery && this.gallery.current.addEventListener("scroll", (e) => {
-			console.log(this.state.isResizing);
 			let s = window.innerWidth*1.5;
 			let scrollDistance = (e.target.scrollLeft - s) / s;
 			if (scrollDistance > 1) { this.onResize(); }
