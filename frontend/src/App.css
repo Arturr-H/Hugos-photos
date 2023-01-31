@@ -340,7 +340,7 @@ h1.title {
 	width: 11rem;
 	height: 14rem;
 
-	background: white;
+	background: #eee;
 	position: relative;
 
 	box-sizing: border-box;
@@ -373,8 +373,19 @@ h1.title {
 	transform: scale(1.05);
 }.cover-image-container > p {
 	font-size: 1rem;
-	color: rgb(180, 180, 180);
+	color: rgb(0, 0, 0);
 
+	padding: 0;
+	margin: 0;
+}.cover-image-container > p.date {
+	font-size: 1.5rem;
+	font-weight: 300;
+	font-size: 0.6rem;
+	color: rgb(146, 146, 146);
+
+	position: absolute;
+	right: 1rem;
+	bottom: 0.5rem;
 	padding: 0;
 	margin: 0;
 }

@@ -47,6 +47,7 @@ class CoverImage extends React.PureComponent {
                         <img src={this.props.src} />
                     </div>
                     <p>Sunsets</p>
+                    <p className="date">12:2151:21</p>
                 </div>
             </div>
         )
