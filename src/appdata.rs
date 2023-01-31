@@ -4,18 +4,18 @@
 use std::collections::HashMap;
 
 /* Global app data */
-struct AppData {
+pub struct AppData {
     collections: HashMap<String, Collection>
 }
 
 /* Image collection */
-struct Collection {
+pub struct Collection {
     images: Vec<Image>,
     title: String,
 }
 
 /* Image */
-struct Image {
+pub struct Image {
     date: String,
     camera: String,
     place: String,
