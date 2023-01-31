@@ -12,16 +12,15 @@ export default class Collections extends React.PureComponent {
     render() {
         return (
             <section className="collection-section">
-                <h1 className="collections-title">My Collections {this.props.scroll}</h1>
                 <div className="collections">
-                    <div className="area a1"><CoverImage /></div>
-                    <div className="area a2"><CoverImage /></div>
-                    <div className="area a3"><CoverImage /></div>
-                    <div className="area a4"><CoverImage /></div>
-                    <div className="area a5"><CoverImage /></div>
-                    <div className="area a6"><CoverImage /></div>
-                    <div className="area a7"><CoverImage /></div>
-                    <div className="area a8"><CoverImage /></div>
+                    <div className="area"><CoverImage src={require("./assets/images/compressed/Bee.JPG")} /></div>
+                    <div className="area"><CoverImage src={require("./assets/images/compressed/ForestWoman.JPG")} /></div>
+                    <div className="area"><CoverImage src={require("./assets/images/compressed/Lingonberries.JPG")} /></div>
+                    <div className="area"><CoverImage src={require("./assets/images/compressed/SkyOcean.JPG")} /></div>
+                    <div className="area"><CoverImage src={require("./assets/images/compressed/SnowHouse.JPG")} /></div>
+                    <div className="area"><CoverImage src={require("./assets/images/compressed/Toadstool.JPG")} /></div>
+                    <div className="area"><CoverImage src={require("./assets/images/compressed/Hayfield.JPG")} /></div>
+                    <div className="area"><CoverImage src={require("./assets/images/compressed/SkyOceanRain.JPG")} /></div>
                 </div>
             </section>
         )
@@ -40,7 +39,16 @@ class CoverImage extends React.PureComponent {
 
     render() {
         return (
-                <img className="cover-image" src={require("./assets/images/compressed/Bee.JPG")} />
+            <div style={{ width: "min-content", position: "relative" }}>
+                <img className="pin" src={require("./assets/icons/pin.png")} />
+                <div style={{ transform: "rotate(" + this.randomRotation + "deg)" }} className="cover-image-container">
+
+                    <div className="cover-image">
+                        <img src={this.props.src} />
+                    </div>
+                    <p>Sunsets</p>
+                </div>
+            </div>
         )
     }
 }

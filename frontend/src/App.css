@@ -293,26 +293,29 @@ h1.title {
 .collection-section {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	justify-content: center;
+		align-items: center;
 
 	height: 100%;
 	background: var(--inverted);
 
+	position: relative;
 	box-sizing: border-box;
-	padding-bottom: 5rem;
+	padding-top: 7rem;
+
 }.collections {
 	width: 100%;
 	height: 100%;
 
 	/* background: var(--inverted); */
 	display: grid;
-	grid-template-areas:
-		"a1 a1 a2 a4 a4"
-		"a5 a6 a6 a4 a4"
-		"a5 a7 a7 a8 a3";
+	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+	grid-template-rows: repeat(auto-fit, minmax(350px, 1fr));
 
 	gap: 2rem;
+	padding: 2rem;
 	box-sizing: border-box;
+	overflow: scroll;
 }.collections > .area {
 	width: 100%;
 	height: 100%;
@@ -331,17 +334,49 @@ h1.title {
 .collections > .a7 { grid-area: a7; }
 .collections > .a8 { grid-area: a8; }
 .collections > .a9 { grid-area: a9; }
-h1.collections-title {
-	font-size: 2rem;
-	font-weight: 300;
-	color: var(--main);
-}
 
 /* Collection images */
-.cover-image {
+.cover-image-container {
+	width: 11rem;
+	height: 14rem;
+
+	background: white;
+	position: relative;
+
+	box-sizing: border-box;
+	padding: 0.5rem;
+
+	box-shadow: 0 0 1rem rgba(0, 0, 0, 0.31);
+	transform-origin: center top;
+}.pin {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	transform: translateX(-45%) translateY(-1.7rem);
+	width: 2rem;
+	height: 2rem;
+
+	z-index: 4;
+}.cover-image-container > .cover-image {
 	width: 100%;
-	height: 100%;
+	aspect-ratio: 1;
+	overflow: hidden;
+}.cover-image-container > .cover-image > img {
 	object-fit: cover;
+	aspect-ratio: 1;
+	width: 100%;
+
+	transition: transform 0.1s ease-in-out;
+}.cover-image-container:hover {
+	animation: rotate-dangle 1s forwards ease-in-out;
+}.cover-image-container:hover .cover-image > img {
+	transform: scale(1.05);
+}.cover-image-container > p {
+	font-size: 1rem;
+	color: rgb(180, 180, 180);
+
+	padding: 0;
+	margin: 0;
 }
 
 /* Media queries */
@@ -398,4 +433,16 @@ h1.collections-title {
 	0% {   transform: translateX(-50%) translateY(0rem); }
 	50% {  transform: translateX(-50%) translateY(1rem); }
 	100% { transform: translateX(-50%) translateY(0rem); }
+}
+
+/* Rotation Dangle aniation */
+@keyframes rotate-dangle {
+	0% { transform: rotate(0deg); }
+	10% { transform: rotate(3.75deg); }
+	20% { transform: rotate(-2.75deg); }
+	30% { transform: rotate(1.75deg); }
+	40% { transform: rotate(-0.75deg); }
+	50% { transform: rotate(0.25deg); }
+	60% { transform: rotate(-0.125deg); }
+	70% { transform: rotate(0deg); }
 }
