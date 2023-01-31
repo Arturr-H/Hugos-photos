@@ -139,11 +139,11 @@ class App extends React.PureComponent {
 	render() {
 		return (
 			<div className="background">
-				<Navbar onToggleDarkmode={this.onToggleDarkmode} />
+				<Navbar canToggleDarkmode={this.state.scrollPercentage < 0.5} onToggleDarkmode={this.onToggleDarkmode} />
 				<h1 style={{
-					transform: "translateX(-50%) translateY(" +  ((-50) - this.state.scrollPercentage*-76) + "%)",
+					transform: "translateX(-50%) translateY(" +  ((-50) - this.state.scrollPercentage*-100) + "%)",
 					top: (50 - this.state.scrollPercentage*50) + "%",
-					fontSize: Math.max(250 - (this.state.scrollPercentage * 400), 100),
+					fontSize: Math.max(19.5 - (this.state.scrollPercentage * 32), 7) + "vmin",
 					letterSpacing: this.state.scrollPercentage * 10
 				}} className="title">
 					Hugo Sjögren
@@ -234,37 +234,43 @@ class MainView extends React.PureComponent {
 		/* Bindings */
 		this.handleMouseEnter = this.handleMouseEnter.bind(this);
 		this.handleMouseLeave = this.handleMouseLeave.bind(this);
+		this.widthGrabber = React.createRef();
 	}
 
 	componentDidMount() {
+		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+			/* Mobile */
+		}else {
+			/* Resize event */
+			window.addEventListener("resize", this.onResize);
 
-		/* Resize event */
-		window.addEventListener("resize", this.onResize);
+			/* Scroll evts */
+			this.gallery.current.scrollLeft = window.innerWidth*1.5 + 11;
+			this.gallery && this.gallery.current.addEventListener("scroll", (e) => {
+				let s = this.widthGrabber.current.offsetWidth - 140;
 
-		/* Scroll evts */
-		this.gallery.current.scrollLeft = window.innerWidth*1.5 + 11;
-		this.gallery && this.gallery.current.addEventListener("scroll", (e) => {
-			let s = window.innerWidth*1.5;
-			let scrollDistance = (e.target.scrollLeft - s) / s;
-			if (scrollDistance > 1) { this.onResize(); }
-			else { this.setState({ scrollDistance }); }
-		})
-		this.intervalId = setInterval(() => {
-			if (this.state.autoScroll && !this.state.isResizing && !this.props.showImageActive) {
-				this.gallery.current.scrollLeft += 2;
-			}
-		}, 10);
+				let scrollDistance = (e.target.scrollLeft - s) / s;
+				if (scrollDistance > 1) { this.onResize(false); }
+				else { this.setState({ scrollDistance }); }
+			})
+			
+			this.intervalId = setInterval(() => {
+				if (this.state.autoScroll && !this.state.isResizing && !this.props.showImageActive) {
+					this.gallery.current.scrollLeft += 2;
+				}
+			}, 10);
+		}
 	}
 	componentWillUnmount() {
 		clearInterval(this.intervalId);
 		clearInterval(this.resizeTimeout);
 	}
 
-	onResize = () => {
+	onResize = (timeout = true) => {
 		this.setState({ isResizing: true });
 		this.resizeTimeout = setTimeout(() => {
 			this.setState({ isResizing: false });
-		}, 500);
+		}, timeout ? 500 : 0);
 		this.gallery.current.scrollLeft = window.innerWidth*1.5 - 10;
 	}
 
@@ -307,7 +313,7 @@ class MainView extends React.PureComponent {
 					className="gallery-container"
 				>
 					{/* <Images /> */}
-					<Images images={this.props.images} triggerImageSelect={this.props.triggerImageSelect} />
+					<Images ref_={this.widthGrabber} images={this.props.images} triggerImageSelect={this.props.triggerImageSelect} />
 					<Images images={this.props.images} triggerImageSelect={this.props.triggerImageSelect} />
 					<Images images={this.props.images} triggerImageSelect={this.props.triggerImageSelect} />
 				</div>
@@ -333,7 +339,7 @@ class Images extends React.PureComponent {
 
 	render() {
 		return (
-			<div className="images-container">
+			<div className="images-container" ref={this.props.ref_}>
 				{
 					this.props.images.map((data, index) => 
 						<Image
