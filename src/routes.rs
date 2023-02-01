@@ -117,12 +117,10 @@ pub async fn collections(appdata: web::Data<Mutex<AppData>>) -> impl Responder {
             .unwrap()
         ).unwrap());
 
-    HttpResponse::Ok().content_type("application/json").body(
-        serde_json::to_string(
+    HttpResponse::Ok().json(
         &*appdata
             .lock()
             .unwrap()
-        ).unwrap().to_string()
     )
 }
 
