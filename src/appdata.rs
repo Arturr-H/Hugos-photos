@@ -18,15 +18,15 @@ pub struct AppData {
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Collection {
     pub images: Vec<Image>,
-    pub title: String,
+    pub title: Vec<u8>,
 }
 
 /* Image */
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Image {
     pub date: usize,
-    pub camera: String,
-    pub place: String,
+    pub camera: Vec<u8>,
+    pub place: Vec<u8>,
 
     pub pathname: String
 }
@@ -50,11 +50,11 @@ impl AppData {
 }
 impl Collection {
     pub fn images(&mut self) -> &mut Vec<Image> { &mut self.images }
-    pub fn title(&self) -> &String { &self.title }
+    pub fn title(&self) -> &Vec<u8> { &self.title }
 }
 impl Image {
     pub fn date(&self) -> &usize { &self.date }
-    pub fn camera(&self) -> &String { &self.camera }
-    pub fn place(&self) -> &String { &self.place }
+    pub fn camera(&self) -> &Vec<u8> { &self.camera }
+    pub fn place(&self) -> &Vec<u8> { &self.place }
     pub fn pathname(&self) -> &String { &self.pathname }
 }
