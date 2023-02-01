@@ -19,6 +19,7 @@ pub struct AppData {
 pub struct Collection {
     pub images: Vec<Image>,
     pub title: Vec<u8>,
+    pub cover_image: Image,
 }
 
 /* Image */

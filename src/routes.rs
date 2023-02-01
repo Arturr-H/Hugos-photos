@@ -54,7 +54,7 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
                         date    : image_date,
                         camera  : image_camera.into(),
                         place   : image_place.into(),
-                        pathname: uuid
+                        pathname: image_id
                     });
 
                 success = true;
@@ -84,15 +84,15 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
             },
             None => return HttpResponse::BadRequest().json(json!({}))
         };
-        println!("{} {} {} {} UUID:{}", &image_camera, image_date, &image_place, image_id, uuid);
 
         /* Create collection */
         let collection = Collection {
             title: collection_title.into(),
-            images: vec![ Image {
+            images: vec![],
+            cover_image: Image {
                 date: image_date, camera: image_camera.into(), place: image_place.into(),
                 pathname: image_id
-            }  ],
+            }  
         };
 
         /* I allow cloning here, because uuid is a relativly small string */
@@ -111,12 +111,6 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
 /* Return all documents */
 #[get("/collections")]
 pub async fn collections(appdata: web::Data<Mutex<AppData>>) -> impl Responder {
-    println!("{}",        serde_json::to_string(
-        &*appdata
-            .lock()
-            .unwrap()
-        ).unwrap());
-
     HttpResponse::Ok().json(
         &*appdata
             .lock()
