@@ -9,20 +9,20 @@ use serde_derive::{ Deserialize, Serialize };
 const PATH_TO_APPDATA_SAVE:&'static str = "./appdata";
 
 /* Global app data */
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct AppData {
-    collections: HashMap<String, Collection>
+    pub collections: HashMap<String, Collection>,
 }
 
 /* Image collection */
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Collection {
     pub images: Vec<Image>,
     pub title: String,
 }
 
 /* Image */
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Image {
     pub date: usize,
     pub camera: String,
@@ -33,7 +33,6 @@ pub struct Image {
 
 /* Method implementations */
 impl AppData {
-    pub fn collections(&self) -> &HashMap<String, Collection> { &self.collections }
     pub fn new() -> Self { Self { collections: HashMap::new() } }
 
     /* Save / retrieve */
@@ -54,7 +53,7 @@ impl Collection {
     pub fn title(&self) -> &String { &self.title }
 }
 impl Image {
-    pub fn date(&self) -> &String { &self.date }
+    pub fn date(&self) -> &usize { &self.date }
     pub fn camera(&self) -> &String { &self.camera }
     pub fn place(&self) -> &String { &self.place }
     pub fn pathname(&self) -> &String { &self.pathname }
