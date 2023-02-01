@@ -52,8 +52,8 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
                 doc.images()
                     .push(Image {
                         date    : image_date,
-                        camera  : image_camera,
-                        place   : image_place,
+                        camera  : image_camera.into(),
+                        place   : image_place.into(),
                         pathname: uuid
                     });
 
@@ -88,9 +88,9 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
 
         /* Create collection */
         let collection = Collection {
-            title: collection_title,
+            title: collection_title.into(),
             images: vec![ Image {
-                date: image_date, camera: image_camera, place: image_place,
+                date: image_date, camera: image_camera.into(), place: image_place.into(),
                 pathname: image_id
             }  ],
         };
@@ -111,7 +111,19 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
 /* Return all documents */
 #[get("/collections")]
 pub async fn collections(appdata: web::Data<Mutex<AppData>>) -> impl Responder {
-    serde_json::to_string(&*appdata.lock().unwrap()).unwrap()
+    println!("{}",        serde_json::to_string(
+        &*appdata
+            .lock()
+            .unwrap()
+        ).unwrap());
+
+    HttpResponse::Ok().json(
+            serde_json::to_string(
+            &*appdata
+                .lock()
+                .unwrap()
+            ).unwrap().to_string()
+    )
 }
 
 /* *CLEAR* all documents */
