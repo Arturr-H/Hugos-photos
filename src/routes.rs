@@ -44,6 +44,7 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
     let uuid:String;
     if let Some(header) = req.headers().get("collection") {
         uuid = header.to_str().unwrap().to_string();
+        let mut success:bool = false;
 
         /* Search for doc */
         for (id, doc) in appdata.lock().unwrap().collections.iter_mut() {
@@ -55,15 +56,24 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
                         place   : image_place,
                         pathname: uuid
                     });
-                appdata.lock().unwrap().save();
 
-                /* Respond */
-                return payload_respond(200);
+                success = true;
+                break;
             }
         };
 
-        /* Respond */
-        payload_respond(400)
+        if success {
+            appdata.lock().unwrap().save();
+
+            /* Respond */
+            HttpResponse::Ok().json(json!({
+                "status": 200,
+                "message": "Inserted into Collection!"
+            }))
+        }else {
+            /* Respond */
+            payload_respond(400)
+        }
     }else {
         /* Create uuid */
         uuid = uuid::Uuid::new_v4().to_string();
@@ -85,12 +95,16 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
             }  ],
         };
 
-        /* Insert collection */
-        appdata.lock().unwrap().collections.insert(uuid, collection);
+        /* I allow cloning here, because uuid is a relativly small string */
+        appdata.lock().unwrap().collections.insert(uuid.clone(), collection);
         appdata.lock().unwrap().save();
 
         /* Respond */
-        payload_respond(200)
+        HttpResponse::Ok().json(json!({
+            "status": 200,
+            "message": "Created Collection!",
+            "collection-id": &uuid
+        }))
     }
 }
 
