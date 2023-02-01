@@ -24,6 +24,9 @@ async fn main() -> std::io::Result<()> {
             .service(routes::collections)
             .service(routes::delete)
 
+            /* Static files (/uploads) */
+            .route("/uploads/{filename:.*}", web::get().to(routes::static_files))
+
             /* Add Cross origin resource sharing */
             .wrap(cors)
     })

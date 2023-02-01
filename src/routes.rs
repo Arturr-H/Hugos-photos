@@ -11,7 +11,7 @@ pub async fn index() -> impl Responder {
     HttpResponse::Ok().body("Backend works!")
 }
 
-/* Create: `title`(bytes) `date` `camera`(bytes) `place`(bytes) and body(bytes) */
+/* Create: `title`(bytes) `date_` `camera_`(bytes) `place_`(bytes) and body(bytes) */
 #[post("/upload-single")]
 pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes: web::Bytes) -> impl Responder {
     /* Create file and write to it */
@@ -23,9 +23,9 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
         image_camera,
         image_place
     ) = match (
-        req.headers().get("date"),
-        req.headers().get("camera"),
-        req.headers().get("place")
+        req.headers().get("date_"),
+        req.headers().get("camera_"),
+        req.headers().get("place_")
     ) {
         (Some(date), Some(camera), Some(place)) =>
             match (date.to_str(), camera.to_str(), place.to_str()) {
@@ -126,9 +126,21 @@ pub async fn delete(appdata: web::Data<Mutex<AppData>>) -> impl Responder {
     "Deleted!"
 }
 
+/* Static file */
+pub async fn static_files(req: HttpRequest) -> impl Responder {
+    let path = req.match_info().get("filename").unwrap_or("warning");
+    HttpResponse::Ok().content_type("image/jpg").body(
+        std::fs::read(
+            format!("./uploads/{}.JPG", path)
+        )
+        .unwrap()
+    )
+}
+
 /* Utils */
 fn payload_respond(status:usize) -> HttpResponse {
     HttpResponse::Ok().json(json!({
         "status": status
     }))
 }
+
