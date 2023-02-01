@@ -1,6 +1,7 @@
 /* Imports */
 use std::sync::Mutex;
 use actix_web::{ App, HttpServer, web::{self, Data} };
+use actix_cors::Cors;
 
 /* Modules */
 mod routes;
@@ -11,7 +12,7 @@ pub mod appdata;
 async fn main() -> std::io::Result<()> {
     let appdata = Data::new(Mutex::new(appdata::AppData::from_file()));
     HttpServer::new(move || {
-
+        let cors = Cors::permissive();
         App::new()
             /* Set maximum payload size to 32MiB */
             .app_data(web::PayloadConfig::new(1 << 25))
@@ -22,6 +23,9 @@ async fn main() -> std::io::Result<()> {
             .service(routes::index)
             .service(routes::collections)
             .service(routes::delete)
+
+            /* Add Cross origin resource sharing */
+            .wrap(cors)
     })
     .workers(12)
     .bind(("127.0.0.1", 8080))?
