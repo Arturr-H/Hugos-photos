@@ -20,6 +20,8 @@ async fn main() -> std::io::Result<()> {
             /* Routes */
             .service(routes::upload)
             .service(routes::index)
+            .service(routes::collections)
+            .service(routes::delete)
     })
     .workers(12)
     .bind(("127.0.0.1", 8080))?
