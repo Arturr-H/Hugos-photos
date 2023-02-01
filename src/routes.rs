@@ -114,6 +114,15 @@ pub async fn collections(appdata: web::Data<Mutex<AppData>>) -> impl Responder {
     serde_json::to_string(&*appdata.lock().unwrap()).unwrap()
 }
 
+/* *CLEAR* all documents */
+#[get("/delete-all")]
+pub async fn delete(appdata: web::Data<Mutex<AppData>>) -> impl Responder {
+    *appdata.lock().unwrap() = AppData::new();
+    AppData::new().save();
+
+    "Deleted!"
+}
+
 /* Utils */
 fn payload_respond(status:usize) -> HttpResponse {
     HttpResponse::Ok().json(json!({
