@@ -108,6 +108,12 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
     }
 }
 
+/* Return all documents */
+#[get("/collections")]
+pub async fn collections(appdata: web::Data<Mutex<AppData>>) -> impl Responder {
+    serde_json::to_string(&*appdata.lock().unwrap()).unwrap()
+}
+
 /* Utils */
 fn payload_respond(status:usize) -> HttpResponse {
     HttpResponse::Ok().json(json!({
