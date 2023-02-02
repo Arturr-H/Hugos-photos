@@ -27,14 +27,7 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
         req.headers().get("camera_"),
         req.headers().get("place_")
     ) {
-        (Some(date), Some(camera), Some(place)) =>
-            match (date.to_str(), camera.to_str(), place.to_str()) {
-            (Ok(d_), Ok(c_), Ok(p_)) => (match d_.parse::<usize>() {
-                Ok(e) => e,
-                Err(_) => return payload_respond(400)
-            }, c_.to_string(), p_.to_string()),
-            _ => return payload_respond(400)
-        },
+        (Some(date), Some(camera), Some(place)) => (date.to_str().unwrap().parse::<usize>().unwrap(), camera.as_bytes(), place.as_bytes()),
         _ => return payload_respond(400)
     };
 
@@ -68,16 +61,14 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
         /* Create uuid */
         uuid = uuid::Uuid::new_v4().to_string();
         let collection_title = match req.headers().get("title") {
-            Some(title) => match title.to_str() {
-                Ok(t_) => t_.to_string(),
-                Err(_) => return payload_respond(400)
-            },
+            Some(title) => String::from_utf8_lossy(title.as_bytes()),
             None => return payload_respond(400)
         };
 
         /* Create collection */
+        dbg!(&collection_title);
         let collection = Collection {
-            title: collection_title.into(),
+            title: collection_title.as_bytes().to_vec(),
             images: vec![],
             cover_image: Image {
                 date: image_date, camera: image_camera.into(), place: image_place.into(),
@@ -134,6 +125,18 @@ pub async fn static_files(req: HttpRequest) -> impl Responder {
             format!("./uploads/{}.JPG", path)
         )
         .unwrap()
+    )
+}
+
+pub async fn get_collection(req: HttpRequest, appdata: web::Data<Mutex<AppData>>) -> impl Responder {
+    let path = req.match_info().get("collection").unwrap_or("");
+    HttpResponse::Ok().json(
+        appdata
+            .lock()
+            .unwrap()
+            .collections
+            .get(path)
+            .unwrap()
     )
 }
 
