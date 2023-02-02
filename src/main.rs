@@ -26,6 +26,7 @@ async fn main() -> std::io::Result<()> {
 
             /* Static files (/uploads) */
             .route("/uploads/{filename:.*}", web::get().to(routes::static_files))
+            .route("/get-collection/{collection:.*}", web::get().to(routes::get_collection))
 
             /* Add Cross origin resource sharing */
             .wrap(cors)
