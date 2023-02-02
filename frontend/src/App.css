@@ -348,6 +348,7 @@ h1.title {
 
 	box-shadow: 0 0 1rem rgba(0, 0, 0, 0.31);
 	transform-origin: center top;
+	overflow: hidden;
 }.pin {
 	position: absolute;
 	left: 50%;
@@ -395,6 +396,32 @@ h1.title {
 	bottom: 0.5rem;
 	padding: 0;
 	margin: 0;
+}.cover-image-container > input[type="text"] {
+	font-size: 1.5rem;
+	font-weight: 500;
+	font-family: "Bebas Neue", cursive;
+	color: #000;
+	background: none;
+	outline: none;
+	border: none;
+
+	margin: 0;
+}
+.uploaded {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+
+	top: 0;
+	display: flex;
+	justify-content: center;
+		align-items: center;
+
+	background: rgb(92, 180, 92);
+	transform: scale(1.1);
+
+	user-select: none;
+	color: #fff;
 }
 
 /* Post */
@@ -487,6 +514,143 @@ h1.title {
 }.create > .create-button:hover {
 	background: rgb(102, 110, 220);
 	color: #fff;
+}
+
+/* Create */
+.create {
+	width: 100vw;
+	height: 100vh;
+
+	background: #fff;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}.create > .column {
+	display: inline-flex;
+	gap: 1rem;
+	flex-direction: column;
+	justify-content: center;
+		align-items: center;
+
+	width: 45%;
+}.create > .column > input[type="text"] {
+	width: 100%;
+
+	outline: none;
+	border: none;
+
+	font-size: 2rem;
+	font-family: 'Bebas Neue', cursive;
+
+	box-sizing: border-box;
+	padding: 0.5rem;
+
+	border-bottom: 0.3rem solid rgb(102, 110, 220);
+
+}.create > .column > input[type="text"]:focus {
+	border-bottom: 0.3rem solid rgb(102, 110, 220);
+}.create > .column > input[type="text"]:focus + .create-button {
+	background: rgb(102, 110, 220);
+	color: #fff;
+}.create > .column > input[type="text"]:focus + .create-button:hover {
+	background: rgb(102, 110, 220);
+	color: #fff;
+}.create-button {
+	width: 100%;
+
+	font-size: 2rem;
+	font-family: 'Bebas Neue', cursive;
+
+	background: #fff;
+	color: rgb(102, 110, 220);
+
+	border: none;
+	outline: none;
+
+	box-sizing: border-box;
+	padding: 0.5rem;
+
+	border: 0.3rem solid rgb(102, 110, 220);
+}.create-button:hover {
+	background: rgb(102, 110, 220);
+	color: #fff;
+}
+
+/* Add */
+.add {
+	width: 100vw;
+	height: 100vh;
+
+	background: #fff;
+	display: inline-flex;
+	gap: 3rem;
+	flex-direction: column;
+	justify-content: center;
+		align-items: center;
+
+	overflow-y: scroll;
+}.add > .row {
+	display: inline-flex;
+	gap: 1rem;
+	flex-direction: row;
+	justify-content: center;
+		align-items: center;
+	flex-wrap: wrap;
+
+	width: 70%;
+}.ontop {
+	position: absolute;
+	top: 0;
+	flex-direction: row !important;
+	z-index: 50;
+}.add > .row > select {
+	width: 100%;
+
+	outline: none;
+	border: none;
+
+	font-size: 2rem;
+	font-family: 'Bebas Neue', cursive;
+
+	box-sizing: border-box;
+	padding: 0.5rem;
+
+	border-bottom: 0.3rem solid rgb(102, 110, 220);
+
+}.add > .row > select:focus {
+	border-bottom: 0.3rem solid rgb(102, 110, 220);
+}
+
+form > input[type="file"] {
+	display: none;
+}form > .file-input {
+	width: 100%;
+	height: min-content;
+	font-size: 2rem;
+	font-family: 'Bebas Neue', cursive;
+
+	background: #fff;
+	color: rgb(102, 110, 220);
+
+	border: none;
+	outline: none;
+
+	box-sizing: border-box;
+	padding: 0.5rem;
+
+	border: 0.3rem solid rgb(102, 110, 220);
+}form > .file-input:hover {
+	background: rgb(102, 110, 220);
+	color: #fff;
+}.add > .create-button:hover {
+	background: rgb(102, 110, 220);
+	color: #fff;
+}.image-upload-form {
+	width: 100%;
+	height: min-content;
+	display: inline-flex;
+	flex-direction: row;
+	gap: 1rem;
 }
 
 /* Media queries */

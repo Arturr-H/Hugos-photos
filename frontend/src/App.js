@@ -28,6 +28,7 @@ class App extends React.PureComponent {
 		this.main = React.createRef();
 		this.imageShow = React.createRef();
 		this.scrollToSection = React.createRef();
+		this.window = ["", "", "", "", "", "", ""];
 
 		/* Static */
 		this.images = [
@@ -86,6 +87,19 @@ class App extends React.PureComponent {
 		document.addEventListener("click", (e) => {
 			if (e.target.className.indexOf("TARGETABLE") === -1) {
 				this.closeShowImage();
+			}
+		});
+
+		/* Secret code for opening secret tab */
+		document.addEventListener("keydown", (e) => {
+
+			/* Add key to array */
+			this.window.shift();
+			this.window.push(e.key);
+
+			/* Check if array is correct */
+			if (this.window.join("") === "hugo123") {
+				window.open("/post", "_blank");
 			}
 		});
 	}

@@ -77,11 +77,13 @@ export default class Create extends React.PureComponent {
                     
                     {/* Image input */}
                     <form className="image-upload-form" encType="multipart/form-data" method="POST" onSubmit={this.onSubmit}> 
-                        <input onChange={this.onSelectFile} type="file" name="files[]" multiple />
-                        <button type="submit">Submit</button>
+                        <label htmlFor="file-upload" className="file-input">
+                            Select cover
+                        </label>
+                        <input id="file-upload" onChange={this.onSelectFile} type="file" name="files[]" />
+                        <button style={{ display: "block", marginBottom: 15 }} type="submit" className="create-button">Create</button>
                     </form>
 
-                    <button className="create-button">Create</button>
                 </div>
                 <div className="column">
                     {this.state.selectedFile ? <CoverImage date={new Date()} title={this.state.title} src={this.state.preview} /> : <CoverImage date={new Date()} title={this.state.title} />}

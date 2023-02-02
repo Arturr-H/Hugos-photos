@@ -67,11 +67,11 @@ export class CoverImage extends React.PureComponent {
     render() {
         return (
             <div style={{ width: "min-content", position: "relative" }}>
-                <img className="pin" src={require("./assets/icons/pin.png")} />
+                <img alt="pin" className="pin" src={require("./assets/icons/pin.png")} />
                 <div style={{ transform: "rotate(" + this.randomRotation + "deg)" }} className="cover-image-container">
 
                     <div className="cover-image">
-                        <img src={this.props.src} />
+                        <img alt="cover" src={this.props.src} />
                     </div>
                     <p>{this.props.title ?? "No title"}</p>
                     <p className="date">{new Date(this.props.date ?? 0).toISOString().slice(0, 10)}</p>
