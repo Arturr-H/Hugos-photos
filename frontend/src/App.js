@@ -77,6 +77,7 @@ class App extends React.PureComponent {
 	}
 
 	componentDidMount() {
+		this.onToggleDarkmode(true);
 		this.main !== null && this.main.current.addEventListener("scroll", (e) => {
 			this.setState({ scrollPercentage: Math.min(e.target.scrollTop / window.innerHeight, 1) });
 		})
@@ -131,8 +132,8 @@ class App extends React.PureComponent {
 	/* Darkmode */
 	onToggleDarkmode = (to) => {
 		/* Set css variable */
-		document.documentElement.style.setProperty("--main", to ? "#000" : "#fff");
-		document.documentElement.style.setProperty("--inverted", to ? "#fff" : "#000");
+		document.documentElement.style.setProperty("--main", to ? "#fff" : "#000");
+		document.documentElement.style.setProperty("--inverted", to ? "#000" : "#fff");
 
 	}
 
@@ -284,7 +285,7 @@ class MainView extends React.PureComponent {
 		let scrollInterval = setInterval(() => {
 			additionalScrollFactor *= 0.9;
 
-			this.gallery.current.scrollLeft += additionalScrollFactor;
+			this.gallery.current && (this.gallery.current.scrollLeft += additionalScrollFactor);
 			if (additionalScrollFactor < 0.05) { clearInterval(scrollInterval); }
 		}, 20);
 	}
@@ -295,7 +296,7 @@ class MainView extends React.PureComponent {
 		let scrollInterval = setInterval(() => {
 			additionalScrollFactor *= 1.1;
 
-			this.gallery.current.scrollLeft += additionalScrollFactor;
+			this.gallery.current && (this.gallery.current.scrollLeft += additionalScrollFactor);
 			if (additionalScrollFactor > 3) {
 				this.setState({ autoScroll: true });
 				clearInterval(scrollInterval);

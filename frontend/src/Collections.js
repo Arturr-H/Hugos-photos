@@ -5,28 +5,55 @@ import React from "react";
 export default class Collections extends React.PureComponent {
     constructor(props) {
         super(props);
+        this.state = {
+            collections: {}
+        }
 
-        /* Props */
+        /* Static */
+        this.backendURL = "http://127.0.0.1:8080/";
+    }
+    
+    componentDidMount() {
+        fetch(this.backendURL + "collections").then(async res => res.json()).then(data => {
+            this.setState({ collections: data.collections });
+        })
     }
 
+    /* Convert bytes into real text strings */
+	convertToRealContent = (content) => {
+        let newContent = "";
+        let array = new Uint8Array(content);
+        for (let i = 0; i < array.length; i++) {
+            newContent += String.fromCharCode(array[i]);
+        }
+
+        const byteArray = Uint8Array.from(newContent.split(","), x => parseInt(x));
+        const result = new TextDecoder().decode(byteArray);
+
+        return result;
+    };
     render() {
         return (
             <section className="collection-section">
                 <div className="collections">
-                    <div className="area"><CoverImage src={require("./assets/images/compressed/Bee.JPG")} /></div>
-                    <div className="area"><CoverImage src={require("./assets/images/compressed/ForestWoman.JPG")} /></div>
-                    <div className="area"><CoverImage src={require("./assets/images/compressed/Lingonberries.JPG")} /></div>
-                    <div className="area"><CoverImage src={require("./assets/images/compressed/SkyOcean.JPG")} /></div>
-                    <div className="area"><CoverImage src={require("./assets/images/compressed/SnowHouse.JPG")} /></div>
-                    <div className="area"><CoverImage src={require("./assets/images/compressed/Toadstool.JPG")} /></div>
-                    <div className="area"><CoverImage src={require("./assets/images/compressed/Hayfield.JPG")} /></div>
-                    <div className="area"><CoverImage src={require("./assets/images/compressed/SkyOceanRain.JPG")} /></div>
+                    {/* <div className="area"><CoverImage src={...} /></div> */}
+                    {
+                        Object.keys(this.state.collections).map((key, index) => {
+                            const collection = this.state.collections[key];
+                            const coverImage = collection.cover_image;
+                            return (
+                                <div className="area" key={index}>
+                                    <CoverImage src={this.backendURL + "uploads/" + coverImage.pathname} title={this.convertToRealContent(collection.title)} date={coverImage.date} />
+                                </div>
+                            )
+                        })
+                    }
                 </div>
             </section>
         )
     }
 }
-class CoverImage extends React.PureComponent {
+export class CoverImage extends React.PureComponent {
     constructor(props) {
         super(props);
 
@@ -46,12 +73,11 @@ class CoverImage extends React.PureComponent {
                     <div className="cover-image">
                         <img src={this.props.src} />
                     </div>
-                    <p>Sunsets</p>
-                    <p className="date">12:2151:21</p>
+                    <p>{this.props.title ?? "No title"}</p>
+                    <p className="date">{new Date(this.props.date ?? 0).toISOString().slice(0, 10)}</p>
                 </div>
             </div>
         )
     }
 }
-
 

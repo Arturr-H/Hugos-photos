@@ -340,7 +340,7 @@ h1.title {
 	width: 11rem;
 	height: 14rem;
 
-	background: #eee;
+	background: #f8f8f8;
 	position: relative;
 
 	box-sizing: border-box;
@@ -361,12 +361,19 @@ h1.title {
 	width: 100%;
 	aspect-ratio: 1;
 	overflow: hidden;
+}.cover-image-container > .cover-image > img[src] {
+	display: block;
+	object-fit: cover;
+	aspect-ratio: 1;
+	width: 100%;
+	transition: transform 0.1s ease-in-out;
 }.cover-image-container > .cover-image > img {
 	object-fit: cover;
 	aspect-ratio: 1;
 	width: 100%;
-
 	transition: transform 0.1s ease-in-out;
+
+	display: none;
 }.cover-image-container:hover {
 	animation: rotate-dangle 1s forwards ease-in-out;
 }.cover-image-container:hover .cover-image > img {
@@ -390,6 +397,98 @@ h1.title {
 	margin: 0;
 }
 
+/* Post */
+.post {
+	width: 100vw;
+	height: 100vh;
+
+	display: inline-flex;
+	gap: 1rem;
+	justify-content: center;
+		align-items: center;
+
+	flex-direction: row;
+	box-sizing: border-box;
+	padding: 1rem;
+}.post > a {
+	width: 100%;
+	height: 100%;
+}.post > a > button {
+	width: 100%;
+	height: 100%;
+
+	font-family: 'Bebas Neue', cursive;
+	font-size: 10vmax;
+	cursor: pointer;
+	background: #fff;
+
+	border: none;
+	outline: none;
+}.post > a > button:hover {
+	background: #ebebeb;
+}
+
+/* Create */
+.create {
+	width: 100vw;
+	height: 100vh;
+
+	background: #fff;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}.create > .column {
+	display: inline-flex;
+	gap: 1rem;
+	flex-direction: column;
+	justify-content: center;
+		align-items: center;
+
+	width: 25%;
+}.create > .column > input[type="text"] {
+	width: 100%;
+
+	outline: none;
+	border: none;
+
+	font-size: 2rem;
+	font-family: 'Bebas Neue', cursive;
+
+	box-sizing: border-box;
+	padding: 0.5rem;
+
+	border-bottom: 0.3rem solid rgb(102, 110, 220);
+
+}.create > .column > input[type="text"]:focus {
+	border-bottom: 0.3rem solid rgb(102, 110, 220);
+}.create > .column > input[type="text"]:focus + .create-button {
+	background: rgb(102, 110, 220);
+	color: #fff;
+}.create > .column > input[type="text"]:focus + .create-button:hover {
+	background: rgb(102, 110, 220);
+	color: #fff;
+}.create > .column > .create-button {
+	width: 100%;
+	height: 5vmax;
+
+	font-size: 2rem;
+	font-family: 'Bebas Neue', cursive;
+
+	background: #fff;
+	color: rgb(102, 110, 220);
+
+	border: none;
+	outline: none;
+
+	box-sizing: border-box;
+	padding: 0.5rem;
+
+	border: 0.3rem solid rgb(102, 110, 220);
+}.create > .create-button:hover {
+	background: rgb(102, 110, 220);
+	color: #fff;
+}
+
 /* Media queries */
 @media screen and (max-width: 800px) {
 	nav {
@@ -406,6 +505,9 @@ h1.title {
 	.image-show-background > .container > .info {
 		gap: 1rem;
 		justify-content: center;
+	}
+	.post {
+		flex-direction: column;
 	}
 }
 @media screen and (max-width: 1000px) {
