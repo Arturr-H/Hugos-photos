@@ -130,13 +130,9 @@ pub async fn static_files(req: HttpRequest) -> impl Responder {
 
 pub async fn get_collection(req: HttpRequest, appdata: web::Data<Mutex<AppData>>) -> impl Responder {
     let path = req.match_info().get("collection").unwrap_or("");
+    let coll = &appdata.lock().unwrap().collections;
     HttpResponse::Ok().json(
-        appdata
-            .lock()
-            .unwrap()
-            .collections
-            .get(path)
-            .unwrap()
+        &coll.get(path)
     )
 }
 
