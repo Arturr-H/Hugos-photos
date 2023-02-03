@@ -14,7 +14,8 @@ export default class Create extends React.PureComponent {
             selectedFile: null,
             preview: null,
 
-            title: "No title"
+            title: "No title",
+            date: "No date specified",
         };
     }
 
@@ -56,7 +57,7 @@ export default class Create extends React.PureComponent {
         axios.post(BACKEND_URL + "upload-single", formData, {
             headers: {
                 title: this.encodeItems(this.state.title).toString(),
-                date_: new Date().getUTCMilliseconds(),
+                date_: this.encodeItems(this.state.date).toString(),
                 camera_: [],
                 place_: []
             }
@@ -68,12 +69,25 @@ export default class Create extends React.PureComponent {
         console.log(Array.from(utf8Encode.encode(item)))
         return Array.from(utf8Encode.encode(item));
 	}
+    /* Convert bytes into real text strings */
+	convertToRealContent = (content) => {
+        let newContent = "";
+        let array = new Uint8Array(content);
+        for (let i = 0; i < array.length; i++) {
+            newContent += String.fromCharCode(array[i]);
+        }
 
+        const byteArray = Uint8Array.from(newContent.split(","), x => parseInt(x));
+        const result = new TextDecoder().decode(byteArray);
+
+        return result;
+    };
     render() {
         return (
             <div className="create">
                 <div className="column">
                     <input onChange={(e) => this.setState({ title: e.target.value })} type="text" placeholder="Collection title..." />
+                    <input onChange={(e) => this.setState({ date: e.target.value })} type="text" placeholder="Collection date..." />
                     
                     {/* Image input */}
                     <form className="image-upload-form" encType="multipart/form-data" method="POST" onSubmit={this.onSubmit}> 
@@ -86,7 +100,7 @@ export default class Create extends React.PureComponent {
 
                 </div>
                 <div className="column">
-                    {this.state.selectedFile ? <CoverImage date={new Date()} title={this.state.title} src={this.state.preview} /> : <CoverImage date={new Date()} title={this.state.title} />}
+                    {this.state.selectedFile ? <CoverImage date={this.state.date} title={this.state.title} src={this.state.preview} /> : <CoverImage date={this.state.date} title={this.state.title} />}
                 </div>
             </div>
         )

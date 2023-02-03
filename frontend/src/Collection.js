@@ -63,7 +63,11 @@ class Collection extends React.PureComponent {
             <section className="collection-with-images">
                 <div className="images">
                     {
-                        this.state.collection.images && this.state.collection.images.map((image, index) => {
+                        this.state.collection.images && this.state.collection.images
+                        .map(value => ({ value, sort: Math.random() }))
+                        .sort((a, b) => a.sort - b.sort)
+                        .map(({ value }) => value)
+                        .map((image, index) => {
                             return (
                                 <img key={index} src={this.backendURL + "uploads/" + image.pathname} alt="Cover" />
                             )

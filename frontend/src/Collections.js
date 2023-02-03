@@ -32,18 +32,36 @@ export default class Collections extends React.PureComponent {
 
         return result;
     };
+
+    shuffleArray = (array) => {
+        let arr_clone = [...array];
+
+        for (var i = arr_clone.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = arr_clone[i];
+            arr_clone[i] = arr_clone[j];
+            arr_clone[j] = temp;
+        }
+
+        return arr_clone;
+    }
+
     render() {
         return (
             <section className="collection-section">
                 <div className="collections">
                     {/* <div className="area"><CoverImage src={...} /></div> */}
                     {
-                        Object.keys(this.state.collections).map((key, index) => {
+                        Object.keys(this.state.collections)
+                        .map(value => ({ value, sort: Math.random() }))
+                        .sort((a, b) => a.sort - b.sort)
+                        .map(({ value }) => value)
+                        .map((key, index) => {
                             const collection = this.state.collections[key];
                             const coverImage = collection.cover_image;
                             return (
                                 <div className="area" key={index}>
-                                    <CoverImage src={this.backendURL + "uploads/" + coverImage.pathname} title={this.convertToRealContent(collection.title)} date={coverImage.date} />
+                                    <CoverImage _key={key} src={this.backendURL + "uploads/" + coverImage.pathname} title={this.convertToRealContent(collection.title)} date={this.convertToRealContent(coverImage.date)} />
                                 </div>
                             )
                         })
@@ -66,17 +84,17 @@ export class CoverImage extends React.PureComponent {
 
     render() {
         return (
-            <div style={{ width: "min-content", position: "relative" }}>
+            <a href={"/collection/" + this.props._key} target="_blank" style={{ width: "min-content", position: "relative" }}>
                 <img alt="pin" className="pin" src={require("./assets/icons/pin.png")} />
                 <div style={{ transform: "rotate(" + this.randomRotation + "deg)" }} className="cover-image-container">
 
                     <div className="cover-image">
                         <img alt="cover" src={this.props.src} />
                     </div>
-                    <p>{this.props.title ?? "No title"}</p>
-                    <p className="date">{new Date(this.props.date ?? 0).toISOString().slice(0, 10)}</p>
+                    <p>{this.props.title === "" ? "No title" : this.props.title}</p>
+                    <p className="date">{this.props.date}</p>
                 </div>
-            </div>
+            </a>
         )
     }
 }
