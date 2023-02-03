@@ -4,6 +4,7 @@ import App from "./App";
 import Post from "./post/Post";
 import Create from "./post/Create";
 import Add from "./post/Add";
+import Collection from "./Collection";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 /* Router */
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
 	{
 		path: "/add",
 		element: <Add />,
+	},
+	{
+		path: "/collection/:id",
+		element: <Collection />,
 	},
 ]);
 
