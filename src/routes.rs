@@ -4,6 +4,7 @@ use std::{ fs::File, io::Write, sync::Mutex };
 use uuid;
 use serde_json::json;
 use crate::appdata::{ AppData, Collection, Image };
+use regex;
 
 /* Routes */
 #[get("/")]
@@ -16,32 +17,49 @@ pub async fn index() -> impl Responder {
 pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes: web::Bytes) -> impl Responder {
     /* Create file and write to it */
     let image_id = uuid::Uuid::new_v4().to_string();
+    let date_regex = regex::Regex::new(r"\d{4}:\d{2}:\d{2} \d{2}:\d{2}").unwrap();
 
     /* Get headers */
     let (
         image_date,
         image_camera,
-        image_place
+        image_place,
+        image_title
     ) = match (
         req.headers().get("date_"),
         req.headers().get("camera_"),
-        req.headers().get("place_")
+        req.headers().get("place_"),
+        req.headers().get("title")
     ) {
-        (Some(date), Some(camera), Some(place)) => (date.to_str().unwrap().parse::<usize>().unwrap(), camera.as_bytes(), place.as_bytes()),
+        (Some(date), Some(camera), Some(place), Some(title)) => (date.to_str().unwrap_or("Invalid date!"), camera.as_bytes(), place.as_bytes(), title.as_bytes()),
         _ => return payload_respond(400)
     };
 
+    let date:String;
+    if let Some(cap) = date_regex.captures(&String::from_utf8_lossy(&bytes[0..1000])) {
+        date = cap[0]
+            .to_string()
+            .replacen(":", "/", 2);
+    }else {
+        date = "Unknown date".into()
+    };
+
+    dbg!(&date);
+
     /* If collection already exists */
     let uuid:String;
+    dbg!(req.headers().get("collection"));
     if let Some(header) = req.headers().get("collection") {
         uuid = header.to_str().unwrap().to_string();
         let mut success:bool = false;
         /* Search for doc */
         for (id, doc) in appdata.lock().unwrap().collections.iter_mut() {
             if id == &uuid {
+                println!("pushin {image_id} in {id}");
                 doc.images()
                     .push(Image {
-                        date    : image_date,
+                        title   : image_title.into(),
+                        date,
                         camera  : image_camera.into(),
                         place   : image_place.into(),
                         pathname: image_id.clone()
@@ -66,12 +84,12 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
         };
 
         /* Create collection */
-        dbg!(&collection_title);
         let collection = Collection {
             title: collection_title.as_bytes().to_vec(),
             images: vec![],
             cover_image: Image {
-                date: image_date, camera: image_camera.into(), place: image_place.into(),
+                title: vec![],
+                date: image_date.into(), camera: image_camera.into(), place: image_place.into(),
                 pathname: image_id.clone()
             }  
         };
