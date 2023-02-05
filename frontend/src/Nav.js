@@ -27,7 +27,7 @@ export default class Navbar extends React.PureComponent {
         return (
             <nav>
                 {this.props.canToggleDarkmode ? <img alt="darkmode" onClick={this.toggleDarkmode} className="darkmode-button" size={68} src={this.staticSvgs[this.state.darkMode ? 1 : 0]} /> : null }
-                <a className="link" href="/about">About Me</a>
+                {this.props.canToggleDarkmode ? <a className="link" href="/about">About Me</a> : null }
                 {/* <a className="link" href="/contact">Kontakt</a>
                 <a className="link" href="/help">Hjälp</a> */}
             </nav>
