@@ -77,14 +77,14 @@ nav {
 	position: relative;
 	font-family: "Poppins", sans-serif;
 
-	text-shadow: 0 .1rem 0.5rem rgba(0, 0, 0, 0.495);
+	text-shadow: 0 .1rem 0.5rem rgba(0, 0, 0, 0.5);
 }nav > a.link::after {
 	content: "";
 	height: 0.08rem;
 	width: 0%;
 	display: block;
 	position: absolute;
-	background: var(--inverted);
+	background: #fff;
 	direction: ltr;
 
 	transform: translateY(-0.3rem);
@@ -117,6 +117,49 @@ h1.title {
 	color: #fff;
     mix-blend-mode: exclusion;
 	filter: brightness(200%);
+}h1.title.upward {
+	left: 0;
+	top: 0;
+	width: max-content;
+	transform: none;
+	position: relative;
+	font-size: 15vmin;
+
+	color: #fff;
+	mix-blend-mode: normal;
+	filter: none;
+}p.biography {
+	position: relative;
+	font-size: 3.4vmin;
+	z-index: 5;
+	font-family: "Poppins", sans-serif;
+	font-weight: 300;
+
+	width: 80%;
+	text-align: justify;
+
+	margin: 0;
+	padding: 0;
+
+	color: #fff;
+}.about-container {
+	height: 100vh;
+	box-sizing: border-box;
+	padding: 5rem 0;
+	display: flex;
+	flex-direction: column;
+		align-items: center;
+
+	overflow-y: scroll;
+}.about-container > img {
+	object-fit: cover;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+
+	filter: blur(5px) brightness(80%);
 }
 
 /* Classses */
@@ -676,12 +719,106 @@ form > input[type="file"] {
 	-webkit-column-gap:0.5rem; /* give it a 0.5rem gap between columns */
 	-moz-column-count:4;
 	-moz-column-gap:0.5rem;
-	column-count:4;
+	column-count:5;
 	column-gap:0.5rem;
-}.collection-with-images > .images > img {
+
+	justify-content: center;
+}.collection-with-images > .images > .image {
+	margin-bottom: 0.5rem;
 	width: 100% !important;
-	height: auto !important;
-	margin-bottom:0.5rem; /* to match column gap */
+	height: 100% !important;
+
+	position: relative;
+	cursor: pointer;
+}.collection-with-images > .images > .image > img {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	z-index: 1;
+
+	border-radius: 0.5rem;
+}.collection-with-images > .images > .image > .gradient {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	position: absolute;
+	z-index: 4;
+	border-radius: 0.5rem;
+
+	transition: background-size 0.1s ease-in-out;
+	background: linear-gradient(to bottom, #000000c6 0%, #ffffff00 30%, #00000000 70%, #000000c6 100%);
+	background-size: 170% 170%;
+	background-position: center center;
+}.collection-with-images > .images > .image:hover .gradient {
+	background-size: 100% 100%;
+}.collection-with-images > .images > .image > p.title {
+	position: absolute;
+	color: #fff;
+	top: 0;
+	left: 1.5vmin;
+	font-size: 3vmin;
+	z-index: 5;
+
+	transform: translateY(-3vmin);
+	opacity: 0;
+
+	transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
+}.collection-with-images > .images > .image:hover .title {
+	transform: translateY(0);
+	opacity: 1;
+}.collection-with-images > .images > .image > p.date {
+	position: absolute;
+	color: #ffffff72;
+	bottom: 0.75vmin;
+	right: 1.5vmin;
+	font-size: 2vmin;
+	font-weight: 300;
+	z-index: 5;
+
+	transform: translateY(2vmin);
+	opacity: 0;
+
+	transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
+}.collection-with-images > .images > .image:hover .date {
+	transform: translateY(0);
+	opacity: 1;
+}
+
+/* Collection navbar */
+.collection-navbar {
+	width: 100%;
+	height: 5vmax;
+
+	display: inline-flex;
+	flex-direction: row;
+		align-items: center;
+
+	gap: 2vmin;
+	box-sizing: border-box;
+	padding: 0 2vmin;
+	position: relative;
+}.collection-navbar > a {
+	height: 100%;
+	display: flex;
+	justify-content: center;
+		align-items: center;
+}.collection-navbar > a > img.icon {
+	height: 60%;
+	aspect-ratio: 1;
+	cursor: pointer;
+}.collection-navbar > h2.title {
+	color: #fff;
+	margin: 0;
+	padding: 0;
+}.collection-navbar > h2.collection-size {
+	color: #ffffff87;
+	margin: 0;
+	padding: 0;
+	font-weight: 300;
+	font-size: 1vmax;
+
+	position: absolute;
+	right: 2vmin;
 }
 
 /* Media queries */
@@ -729,6 +866,13 @@ form > input[type="file"] {
 		-moz-column-count:    1;
 		-webkit-column-count: 1;
 		column-count:         1;
+
+		padding: 0.2rem;
+	}
+	.collection-with-images > .images > .image {
+		margin-bottom: 0.2rem;
+	}.collection-with-images > .images > .image > img {
+		border-radius: 0;
 	}
 }
 @media screen and (max-width: 1000px) {

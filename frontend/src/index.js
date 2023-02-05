@@ -6,6 +6,7 @@ import Create from "./post/Create";
 import Add from "./post/Add";
 import Collection from "./Collection";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import About from "./About";
 
 /* Router */
 const router = createBrowserRouter([
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
 	{
 		path: "/collection/:id",
 		element: <Collection />,
+	},
+	{
+		path: "/about",
+		element: <About />,
 	},
 ]);
 

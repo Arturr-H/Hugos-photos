@@ -42,6 +42,7 @@ export default class Add extends React.PureComponent {
         fetch(BACKEND_URL + "collections").then(async res => res.json()).then(data => {
             let coll = data.collections;
             this.setState({ collections: coll });
+            console.log("OOOO", Object.keys(coll)[0]);
             this.setState({ postToCollectionHash: Object.keys(coll)[0]  })
         });
     }
@@ -95,6 +96,7 @@ export default class Add extends React.PureComponent {
             this.state.selectedFiles[index].name
         );
 
+        console.log("TITLE", this.state.images[index].title);
         axios.post(BACKEND_URL + "upload-single", formData, {
             headers: {
                 title: this.encodeItems(this.state.images[index].title).toString(),
@@ -128,7 +130,7 @@ export default class Add extends React.PureComponent {
             <div className="add">
                 <div className="row ontop">
                     {/* Select collection input */}
-                    <select className="collection-select" onChange={(e) => this.setState({ postToCollectionHash: e })}>
+                    <select className="collection-select" onChange={(e) => this.setState({ postToCollectionHash: e.target.value })}>
                         {Object.keys(this.state.collections).map(key => <option value={key}>{this.convertToRealContent(this.state.collections[key].title)}</option>)}
                     </select>
 
