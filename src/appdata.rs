@@ -25,9 +25,10 @@ pub struct Collection {
 /* Image */
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Image {
-    pub date: usize,
+    pub date: String,
     pub camera: Vec<u8>,
     pub place: Vec<u8>,
+    pub title: Vec<u8>,
 
     pub pathname: String
 }
@@ -54,7 +55,7 @@ impl Collection {
     pub fn title(&self) -> &Vec<u8> { &self.title }
 }
 impl Image {
-    pub fn date(&self) -> &usize { &self.date }
+    pub fn date(&self) -> &String { &self.date }
     pub fn camera(&self) -> &Vec<u8> { &self.camera }
     pub fn place(&self) -> &Vec<u8> { &self.place }
     pub fn pathname(&self) -> &String { &self.pathname }
