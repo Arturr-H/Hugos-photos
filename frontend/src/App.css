@@ -378,6 +378,12 @@ a.download {
 	padding: 2rem;
 	box-sizing: border-box;
 	overflow: scroll;
+
+	/* Hide scrollbar */
+	-ms-overflow-style: none;  /* IE and Edge */
+	scrollbar-width: none;  /* Firefox */
+}.collections::-webkit-scrollbar {
+	display: none;  /* Chrome, Safari, Opera*/
 }.collections > .area {
 	width: 100%;
 	height: 100%;
@@ -386,6 +392,12 @@ a.download {
 	display: flex;
 	justify-content: center;
 		align-items: center;
+
+	/* Hide scrollbar */
+	-ms-overflow-style: none;  /* IE and Edge */
+	scrollbar-width: none;  /* Firefox */
+}.collections > .area::-webkit-scrollbar {
+	display: none;  /* Chrome, Safari, Opera*/
 }
 .collections > .a1 { grid-area: a1; }
 .collections > .a2 { grid-area: a2; }
