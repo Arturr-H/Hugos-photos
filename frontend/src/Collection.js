@@ -30,14 +30,14 @@ class Collection extends React.PureComponent {
         this.state = {
             collection: {},
             showImage: {
-				active: false,
-				info: {
-					src: "",
-					ort: "",
-					datum: "",
-					kamera: ""
-				}
-			}
+                active: false,
+                info: {
+                    src: "",
+                    ort: "",
+                    datum: "",
+                    kamera: ""
+                }
+            }
         }
 
         /* Static */
@@ -49,18 +49,17 @@ class Collection extends React.PureComponent {
 
     componentDidMount() {
         /* Remove active if click item not have className="TARGETABLE" */
-		document.addEventListener("click", (e) => {
-			if (e.target.className.indexOf("TARGETABLE") === -1) {
-				this.closeShowImage();
-			}
-		});
+        document.addEventListener("click", (e) => {
+            if (e.target.className.indexOf("TARGETABLE") === -1) {
+                this.closeShowImage();
+            }
+        });
 
         fetch(this.backendURL + "get-collection/" + this.id).then(async res => res.json()).then(data => {
             if (data == null) {
                 alert("Collection not found");
             } else {
                 this.setState({ collection: data });
-                console.log(data);
             }
         })
     }
@@ -106,6 +105,28 @@ class Collection extends React.PureComponent {
         })
     }
 
+    /* Download image from <a> tag */
+    download = (e) => {
+        e.preventDefault();
+        fetch(e.target.href, {
+            method: "GET",
+            headers: {}
+        })
+            .then(response => {
+                response.arrayBuffer().then(function (buffer) {
+                    const url = window.URL.createObjectURL(new Blob([buffer]));
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.setAttribute("download", "image-" + Date.now() + ".jpg");
+                    document.body.appendChild(link);
+                    link.click();
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
+
     render() {
         return (
             <section className="collection-with-images">
@@ -117,48 +138,57 @@ class Collection extends React.PureComponent {
                 <div className="images TARGETABLE">
                     {
                         this.state.collection.images && this.state.collection.images
-                        .map(value => ({ value, sort: Math.random() }))
-                        .sort((a, b) => a.sort - b.sort)
-                        .map(({ value }) => value)
-                        .map((image, index) => {
-                            let src = this.backendURL + "uploads/" + image.pathname;
-                            return (
-                                <div className="image TARGETABLE" onClick={() => this.showImage(src, "Icke definerat", image.date, "Nikon")}>
-                                    <img className="TARGETABLE" key={index} src={src} alt="Cover" />
-                                    <div className="gradient TARGETABLE"></div>
-                                    <p className="title TARGETABLE">{this.convertToRealContent(image.title)}</p>
-                                    <p className="date TARGETABLE">{image.date}</p>
-                                </div>
-                            )
-                        })
+                            .map(value => ({ value, sort: Math.random() }))
+                            .sort((a, b) => a.sort - b.sort)
+                            .map(({ value }) => value)
+                            .map((image, index) => {
+                                let src = this.backendURL + "uploads/" + image.pathname;
+                                return (
+                                    <div key={index} className="image TARGETABLE" onClick={() => this.showImage(src, "Icke definerat", image.date, "Nikon")}>
+                                        <img className="TARGETABLE" key={index} src={src} alt="Cover" />
+                                        <div className="gradient TARGETABLE"></div>
+                                        <p className="title TARGETABLE">{this.convertToRealContent(image.title)}</p>
+                                        <p className="date TARGETABLE">{image.date}</p>
+                                    </div>
+                                )
+                            })
                     }
                 </div>
 
                 {/* On image click */}
-				{ this.state.showImage.active ? <div className="image-show-background" ref={this.imageShow}>
-					<div className="TARGETABLE container">
-						<Icon className="close" size={24} icon="x" onClick={this.closeShowImage} />
-						<img alt="backg" src={this.state.showImage.info.src} className="TARGETABLE image-show" />
-						<div className="TARGETABLE info">
-							<div className="TARGETABLE bit">
-								<Icon size={24} icon="calendar" />
-								<p className="TARGETABLE">Datum: </p>
-								<p className="TARGETABLE">{this.state.showImage.info.datum}</p>
-							</div>
-							<div className="TARGETABLE bit">
-								<Icon size={24} icon="map-pin" />
-								<p className="TARGETABLE">Ort: </p>
-								<p className="TARGETABLE">{this.state.showImage.info.ort}</p>
-							</div>
-							<div className="TARGETABLE bit">
-								<Icon size={24} icon="camera" />
-								<p className="TARGETABLE">Kamera: </p>
-								<p className="TARGETABLE">{this.state.showImage.info.kamera}</p>
-							</div>
-						</div>
-					</div>
-					{/* <img alt="blur" src={this.images[0]} className="TARGETABLE image-show-blur" /> */}
-				</div> : null }
+                {this.state.showImage.active ? <div className="image-show-background" ref={this.imageShow}>
+                    <div className="TARGETABLE container">
+                        <Icon className="close" size={24} icon="x" onClick={this.closeShowImage} />
+                        <img alt="backg" src={this.state.showImage.info.src} className="TARGETABLE image-show" />
+                        <div className="TARGETABLE info">
+                            <div className="TARGETABLE bit">
+                                <Icon size={24} icon="calendar" />
+                                <p className="TARGETABLE">Datum: </p>
+                                <p className="TARGETABLE">{this.state.showImage.info.datum}</p>
+                            </div>
+                            <div className="TARGETABLE bit">
+                                <Icon size={24} icon="map-pin" />
+                                <p className="TARGETABLE">Ort: </p>
+                                <p className="TARGETABLE">{this.state.showImage.info.ort}</p>
+                            </div>
+                            <div className="TARGETABLE bit">
+                                <Icon size={24} icon="camera" />
+                                <p className="TARGETABLE">Kamera: </p>
+                                <p className="TARGETABLE">{this.state.showImage.info.kamera}</p>
+                            </div>
+                        </div>
+                        <a
+                            href={this.state.showImage.info.src}
+                            className="TARGETABLE download"
+                            download
+                            onClick={e => this.download(e)}
+                        >
+                            <p className="TARGETABLE">Download</p>
+                            <Icon className="TARGETABLE" size={24} icon="download" />
+                        </a>
+                    </div>
+                    {/* <img alt="blur" src={this.images[0]} className="TARGETABLE image-show-blur" /> */}
+                </div> : null}
             </section>
         )
     }
