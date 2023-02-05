@@ -543,6 +543,7 @@ dependencies = [
  "actix-cors",
  "actix-web",
  "bincode",
+ "regex",
  "serde",
  "serde_derive",
  "serde_json",
