@@ -1,6 +1,6 @@
 /* Imports */
 use actix_web::{ get, post, HttpResponse, Responder, web, HttpRequest };
-use std::{ fs::File, io::Write, sync::Mutex, path::PathBuf };
+use std::{ fs::File, io::Write, sync::Mutex };
 use magick_rust::{ MagickWand, magick_wand_genesis };
 use std::sync::Once;
 use uuid;
@@ -156,6 +156,15 @@ pub async fn static_files(req: HttpRequest) -> impl Responder {
     HttpResponse::Ok().content_type("image/jpg").body(
         std::fs::read(
             format!("./uploads/{}.JPG", path)
+        )
+        .unwrap()
+    )
+}
+pub async fn static_files_compressed(req: HttpRequest) -> impl Responder {
+    let path = req.match_info().get("filename").unwrap_or("warning");
+    HttpResponse::Ok().content_type("image/jpg").body(
+        std::fs::read(
+            format!("./uploads-compressed/{}.JPG", path)
         )
         .unwrap()
     )
