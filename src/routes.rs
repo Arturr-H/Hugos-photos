@@ -1,10 +1,15 @@
 /* Imports */
 use actix_web::{ get, post, HttpResponse, Responder, web, HttpRequest };
-use std::{ fs::File, io::Write, sync::Mutex };
+use std::{ fs::File, io::Write, sync::Mutex, path::PathBuf };
+use magick_rust::{ MagickWand, magick_wand_genesis };
+use std::sync::Once;
 use uuid;
 use serde_json::json;
 use crate::appdata::{ AppData, Collection, Image };
 use regex;
+
+/* Magick rust */
+static START: Once = Once::new();
 
 /* Routes */
 #[get("/")]
@@ -103,6 +108,20 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
         .map(|ix| ix + 4).unwrap();
 
     file.write_all(&bytes[payload_index..]).unwrap();
+    
+    START.call_once(|| {
+        magick_wand_genesis();
+    });
+    let wand = MagickWand::new();
+    wand.read_image_blob(&bytes[payload_index..]).unwrap();
+    let width = wand.get_image_width();
+    let height = wand.get_image_height();
+
+    /* Resize */
+    wand.resize_image(width / 4, height / 4, 0);
+
+    /* Write to ./uploads-compressed */
+    wand.write_image(&format!("uploads-compressed/{}.JPG", &image_id)).unwrap();
 
     /* Respond */
     HttpResponse::Ok().json(json!({
