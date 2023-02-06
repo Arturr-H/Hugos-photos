@@ -44,18 +44,14 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
         date = "Unknown date".into()
     };
 
-    dbg!(&date);
-
     /* If collection already exists */
     let uuid:String;
-    dbg!(req.headers().get("collection"));
     if let Some(header) = req.headers().get("collection") {
         uuid = header.to_str().unwrap().to_string();
         let mut success:bool = false;
         /* Search for doc */
         for (id, doc) in appdata.lock().unwrap().collections.iter_mut() {
             if id == &uuid {
-                println!("pushin {image_id} in {id}");
                 doc.images()
                     .push(Image {
                         title   : image_title.into(),
