@@ -3,3 +3,4 @@
 /frontend/build
 /frontend/src/assets/images
 /uploads/*
+/uploads-compressed/*
