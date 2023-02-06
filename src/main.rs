@@ -10,6 +10,7 @@ pub mod appdata;
 /* Main */
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    // appdata::AppData::new().save();
     let appdata = Data::new(Mutex::new(appdata::AppData::from_file()));
     HttpServer::new(move || {
         let cors = Cors::permissive();
@@ -26,6 +27,7 @@ async fn main() -> std::io::Result<()> {
 
             /* Static files (/uploads) */
             .route("/uploads/{filename:.*}", web::get().to(routes::static_files))
+            .route("/uploads-compressed/{filename:.*}", web::get().to(routes::static_files_compressed))
             .route("/get-collection/{collection:.*}", web::get().to(routes::get_collection))
 
             /* Add Cross origin resource sharing */
