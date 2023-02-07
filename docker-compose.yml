@@ -13,3 +13,12 @@ services:
     volumes:
       - /uploads:/usr/src/uploads
       - /uploads-compressed:/usr/src/uploads-compressed
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Frontend.Dockerfile
+
+    ## TODO: Switch this later - might not have cname for 8080
+    ports:
+      - "8080:8080"
