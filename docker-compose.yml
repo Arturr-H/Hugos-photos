@@ -11,8 +11,8 @@ services:
 
     ## Image folders (save them in volume)
     volumes:
-      - /uploads:/usr/src/uploads
-      - /uploads-compressed:/usr/src/uploads-compressed
+      - /uploads:/usr/src/app/uploads
+      - /uploads-compressed:/usr/src/app/uploads-compressed
 
   frontend:
     build:
