@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Backend.Dockerfile
+
+    ports:
+      - "8081:8081"
+
+    ## Image folders (save them in volume)
+    volumes:
+      - /uploads:/usr/src/uploads
+      - /uploads-compressed:/usr/src/uploads-compressed
