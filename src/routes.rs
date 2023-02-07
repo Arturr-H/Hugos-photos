@@ -1,6 +1,6 @@
 /* Imports */
 use actix_web::{ get, post, HttpResponse, Responder, web, HttpRequest };
-use std::{ fs::File, io::Write, sync::Mutex };
+use std::{ fs::File, io::Write, sync::{Mutex, LockResult} };
 use magick_rust::{ MagickWand, magick_wand_genesis };
 use std::sync::Once;
 use uuid;
@@ -22,7 +22,7 @@ pub async fn index() -> impl Responder {
 pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes: web::Bytes) -> impl Responder {
     /* Create file and write to it */
     let image_id = uuid::Uuid::new_v4().to_string();
-    let date_regex = regex::Regex::new(r"\d{4}:\d{2}:\d{2} \d{2}:\d{2}").unwrap();
+    let date_regex = regex::Regex::new(r"\d{4}:\d{2}:\d{2} \d{2}:\d{2}").expect("This should compile unless versions are changed");
 
     /* Get headers */
     let (
@@ -52,10 +52,17 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
     /* If collection already exists */
     let uuid:String;
     if let Some(header) = req.headers().get("collection") {
-        uuid = header.to_str().unwrap().to_string();
+        uuid = match header.to_str() {
+            Ok(e) => e,
+            Err(_) => return payload_respond(4001)
+        }.to_string();
+
         let mut success:bool = false;
         /* Search for doc */
-        for (id, doc) in appdata.lock().unwrap().collections.iter_mut() {
+        for (id, doc) in match appdata.lock() {
+            Ok(e) => e,
+            Err(_) => return payload_respond(4002)
+        }.collections.iter_mut() {
             if id == &uuid {
                 doc.images()
                     .push(Image {
@@ -71,10 +78,13 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
         };
 
         if success {
-            appdata.lock().unwrap().save();
+            match appdata.lock() {
+                Ok(e) => e,
+                Err(_) => return payload_respond(4003)
+            }.save();
         }else {
             /* Respond */
-            return payload_respond(400)
+            return payload_respond(40004)
         }
     }else {
         /* Create uuid */
@@ -97,24 +107,43 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
         };
 
         /* I allow cloning here, because uuid is a relativly small string */
-        appdata.lock().unwrap().collections.insert(uuid.clone(), collection);
-        appdata.lock().unwrap().save();
+        match appdata.lock() {
+            Ok(e) => e,
+            Err(_) => return payload_respond(4005)
+        }.collections.insert(uuid.clone(), collection);
+
+        match appdata.lock() {
+            Ok(e) => e,
+            Err(_) => return payload_respond(4006)
+        }.save();
     };
 
     /* Write to file - once all criteria meet */
-    let mut file = File::create(format!("uploads/{}.JPG", &image_id)).unwrap();
-    let payload_index = bytes
+    let mut file = match File::create(format!("uploads/{}.JPG", &image_id)) {
+        Ok(e) => e,
+        Err(_) => return payload_respond(4007)
+    };
+    let payload_index = match bytes
         .windows(4)
         .position(|w| matches!(w, b"\r\n\r\n"))
-        .map(|ix| ix + 4).unwrap();
+        .map(|ix| ix + 4) {
+            Some(e) => e,
+            None => return payload_respond(4008)
+        };
 
-    file.write_all(&bytes[payload_index..]).unwrap();
+    match file.write_all(&bytes[payload_index..]) {
+        Ok(e) => e,
+        Err(_) => return payload_respond(4009)
+    };
     
     START.call_once(|| {
         magick_wand_genesis();
     });
     let wand = MagickWand::new();
-    wand.read_image_blob(&bytes[payload_index..]).unwrap();
+    match wand.read_image_blob(&bytes[payload_index..]) {
+        Ok(e) => e,
+        Err(_) => return payload_respond(4010)
+    };
     let width = wand.get_image_width();
     let height = wand.get_image_height();
 
@@ -122,7 +151,10 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
     wand.resize_image(width / 4, height / 4, 0);
 
     /* Write to ./uploads-compressed */
-    wand.write_image(&format!("uploads-compressed/{}.JPG", &image_id)).unwrap();
+    match wand.write_image(&format!("uploads-compressed/{}.JPG", &image_id)) {
+        Ok(e) => e,
+        Err(_) => return payload_respond(4011)
+    };
 
     /* Respond */
     HttpResponse::Ok().json(json!({
@@ -136,44 +168,58 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
 #[get("/collections")]
 pub async fn collections(appdata: web::Data<Mutex<AppData>>) -> impl Responder {
     HttpResponse::Ok().json(
-        &*appdata
-            .lock()
-            .unwrap()
+        &*match appdata.lock() {
+            LockResult::Ok(e) => e,
+            LockResult::Err(_) => return payload_respond(4012)
+        }
     )
 }
 
 /* *CLEAR* all documents */
 #[get("/delete-all")]
 pub async fn delete(appdata: web::Data<Mutex<AppData>>) -> impl Responder {
-    *appdata.lock().unwrap() = AppData::new();
-    AppData::new().save();
+    *match appdata.lock() {
+        LockResult::Ok(e) => e,
+        LockResult::Err(_) => return payload_respond(4013)
+    } = AppData::new();
+    match AppData::new().save() {
+        Some(_) => (),
+        None => return payload_respond(4014),
+    };
 
-    "Deleted!"
+    payload_respond(200)
 }
 
 /* Static file */
 pub async fn static_files(req: HttpRequest) -> impl Responder {
     let path = req.match_info().get("filename").unwrap_or("warning");
     HttpResponse::Ok().content_type("image/jpg").body(
-        std::fs::read(
+        match std::fs::read(
             format!("./uploads/{}.JPG", path)
-        )
-        .unwrap()
+        ) {
+            Ok(e) => e,
+            Err(_) => return payload_respond(4014),
+        }
     )
 }
 pub async fn static_files_compressed(req: HttpRequest) -> impl Responder {
     let path = req.match_info().get("filename").unwrap_or("warning");
     HttpResponse::Ok().content_type("image/jpg").body(
-        std::fs::read(
+        match std::fs::read(
             format!("./uploads-compressed/{}.JPG", path)
-        )
-        .unwrap()
+        ) {
+            Ok(e) => e,
+            Err(_) => return payload_respond(4014),
+        }
     )
 }
 
 pub async fn get_collection(req: HttpRequest, appdata: web::Data<Mutex<AppData>>) -> impl Responder {
     let path = req.match_info().get("collection").unwrap_or("");
-    let coll = &appdata.lock().unwrap().collections;
+    let coll = &match appdata.lock() {
+        LockResult::Ok(e) => e,
+        LockResult::Err(_) => return payload_respond(4012)
+    }.collections;
     HttpResponse::Ok().json(
         &coll.get(path)
     )
