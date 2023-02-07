@@ -20,6 +20,7 @@ pub struct Collection {
     pub images: Vec<Image>,
     pub title: Vec<u8>,
     pub cover_image: Image,
+    pub date: String
 }
 
 /* Image */
@@ -53,6 +54,7 @@ impl AppData {
 impl Collection {
     pub fn images(&mut self) -> &mut Vec<Image> { &mut self.images }
     pub fn title(&self) -> &Vec<u8> { &self.title }
+    pub fn date(&self) -> &String { &self.date }
 }
 impl Image {
     pub fn date(&self) -> &String { &self.date }
