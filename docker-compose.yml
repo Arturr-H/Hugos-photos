@@ -13,6 +13,7 @@ services:
     volumes:
       - /uploads:/usr/src/app/uploads
       - /uploads-compressed:/usr/src/app/uploads-compressed
+      - /appdata:/usr/src/app/appdata
 
   frontend:
     build:
