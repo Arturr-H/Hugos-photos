@@ -155,6 +155,7 @@ class App extends React.PureComponent {
 		return (
 			<div className="background">
 				<Navbar canToggleDarkmode={this.state.scrollPercentage < 0.5} onToggleDarkmode={this.onToggleDarkmode} />
+				
 				<h1 style={{
 					transform: "translateX(-50%) translateY(" +  ((-50) - this.state.scrollPercentage*-100) + "%)",
 					top: (50 - this.state.scrollPercentage*50) + "%",

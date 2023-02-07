@@ -57,7 +57,7 @@ export default class Create extends React.PureComponent {
         axios.post(BACKEND_URL + "upload-single", formData, {
             headers: {
                 title: this.encodeItems(this.state.title).toString(),
-                date_: this.encodeItems(this.state.date).toString(),
+                date_: this.state.date,
                 camera_: [],
                 place_: []
             }
