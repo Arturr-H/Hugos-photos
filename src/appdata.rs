@@ -40,15 +40,17 @@ impl AppData {
 
     /* Save / retrieve */
     pub fn from_file() -> Self {
-        let mut file = File::open(PATH_TO_APPDATA_SAVE).unwrap();
+        let mut file = File::open(PATH_TO_APPDATA_SAVE).expect("Should crash (1x1121)");
         let mut buffer = Vec::new();
-        file.read_to_end(&mut buffer).unwrap();
-        bincode::deserialize(&buffer).unwrap()
+        file.read_to_end(&mut buffer).expect("Should crash (1x1122)");
+        bincode::deserialize(&buffer).expect("Should crash (1x1123)")
     }
-    pub fn save(&self) -> () {
-        let mut file = File::create(PATH_TO_APPDATA_SAVE).unwrap();
-        let buffer = bincode::serialize(&self).unwrap();
-        file.write_all(&buffer).unwrap();
+    pub fn save(&self) -> Option<()> {
+        let mut file = File::create(PATH_TO_APPDATA_SAVE).ok()?;
+        let buffer = bincode::serialize(&self).ok()?;
+        file.write_all(&buffer).ok()?;
+
+        Some(())
     }
 }
 impl Collection {
