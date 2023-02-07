@@ -92,7 +92,8 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
                 title: vec![],
                 date: image_date.into(), camera: image_camera.into(), place: image_place.into(),
                 pathname: image_id.clone()
-            }  
+            },
+            date: image_date.into()
         };
 
         /* I allow cloning here, because uuid is a relativly small string */
