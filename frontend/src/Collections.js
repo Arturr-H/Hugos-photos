@@ -61,7 +61,7 @@ export default class Collections extends React.PureComponent {
                             const coverImage = collection.cover_image;
                             return (
                                 <div className="area" key={index}>
-                                    <CoverImage _key={key} src={this.backendURL + "uploads/" + coverImage.pathname} title={this.convertToRealContent(collection.title)} date={this.convertToRealContent(coverImage.date)} />
+                                    <CoverImage _key={key} src={this.backendURL + "uploads-compressed/" + coverImage.pathname} title={this.convertToRealContent(collection.title)} date={this.convertToRealContent(coverImage.date)} />
                                 </div>
                             )
                         })

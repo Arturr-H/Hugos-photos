@@ -142,9 +142,10 @@ class Collection extends React.PureComponent {
                             .sort((a, b) => a.sort - b.sort)
                             .map(({ value }) => value)
                             .map((image, index) => {
-                                let src = this.backendURL + "uploads/" + image.pathname;
+                                let src = this.backendURL + "uploads-compressed/" + image.pathname;
+                                let src_not_compressed = this.backendURL + "uploads/" + image.pathname;
                                 return (
-                                    <div key={index} className="image TARGETABLE" onClick={() => this.showImage(src, "Icke definerat", image.date, "Nikon")}>
+                                    <div key={index} className="image TARGETABLE" onClick={() => this.showImage(src_not_compressed, "Icke definerat", image.date, "Nikon")}>
                                         <img className="TARGETABLE" key={index} src={src} alt="Cover" />
                                         <div className="gradient TARGETABLE"></div>
                                         <p className="title TARGETABLE">{this.convertToRealContent(image.title)}</p>
