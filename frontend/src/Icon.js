@@ -17,6 +17,8 @@ export default class Icon extends React.PureComponent {
             "maximize"   : require("./assets/icons/maximize.svg").default,
             "x"          : require("./assets/icons/x.svg").default,
             "chevron-down": require("./assets/icons/chevron-down.svg").default,
+            "chevron-left": require("./assets/icons/chevron-left.svg").default,
+            "chevron-down-white": require("./assets/icons/chevron-down-white.svg").default,
             "download": require("./assets/icons/download.svg").default,
 		};
 	}
