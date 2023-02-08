@@ -85,6 +85,7 @@ class App extends React.PureComponent {
 			/* Check if array is correct */
 			if (this.window.join("") === "hugo123") {
 				window.open("/post", "_blank");
+				this.window = [];
 			}
 		});
 	}
@@ -213,53 +214,55 @@ class MainView extends React.PureComponent {
 		/* Changeable */
 		this.state = {
 			isResizing: false,
-			autoScroll: true
+			autoScroll: true,
+			galleryScrollPercentage: 0
 		};
 
 		/* Refs */
 		this.gallery = React.createRef();
+		this.widthGrabber = React.createRef();
 
 		/* Bindings */
 		this.handleMouseEnter = this.handleMouseEnter.bind(this);
 		this.handleMouseLeave = this.handleMouseLeave.bind(this);
-		this.widthGrabber = React.createRef();
 	}
 
 	componentDidMount() {
-		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-			/* Mobile */
-		}else {
-			/* Resize event */
-			window.addEventListener("resize", this.onResize);
+		// if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+		// 	/* Mobile */
+		// }else {
+		// 	/* Resize event */
+		// 	window.addEventListener("resize", this.onResize);
 
-			/* Scroll evts */
-			this.gallery.current.scrollLeft = window.innerWidth*1.5 + 11;
-			this.gallery && this.gallery.current.addEventListener("scroll", (e) => {
-				let s = this.widthGrabber.current.offsetWidth - 140;
+		// 	/* Scroll evts */
+		// 	this.gallery.current.scrollLeft = window.innerWidth*1.5 + 11;
+		// 	this.gallery && this.gallery.current.addEventListener("scroll", (e) => {
+		// 		let s = this.widthGrabber.current.offsetWidth - 140;
 
-				let scrollDistance = (e.target.scrollLeft - s) / s;
-				if (scrollDistance > 1) { this.onResize(false); }
-				else { this.setState({ scrollDistance }); }
-			})
+		// 		let scrollDistance = (e.target.scrollLeft - s) / s;
+		// 		if (scrollDistance > 1) { this.onResize(false); }
+		// 		else { this.setState({ scrollDistance }); }
+		// 	})
 			
-			this.intervalId = setInterval(() => {
-				if (this.state.autoScroll && !this.state.isResizing && !this.props.showImageActive) {
-					this.gallery.current.scrollLeft += 2;
-				}
-			}, 10);
-		}
+			// this.intervalId = setInterval(() => {
+			// 	if (this.state.autoScroll && !this.state.isResizing && !this.props.showImageActive) {
+			// 		this.gallery.current.scrollLeft += 2;
+			// 	}
+			// }, 10);
+		// }
+
+		// this.intervalId = setInterval(() => {
+		// 	let next = this.state.galleryScrollPercentage + 0.06;
+		// 	if (next >= 0) {
+		// 		this.setState({ galleryScrollPercentage: -100 });
+		// 	}else {
+		// 		this.setState({ galleryScrollPercentage: next });
+		// 	}
+		// }, 8);
 	}
 	componentWillUnmount() {
-		clearInterval(this.intervalId);
+		// clearInterval(this.intervalId);
 		clearInterval(this.resizeTimeout);
-	}
-
-	onResize = (timeout = true) => {
-		this.setState({ isResizing: true });
-		this.resizeTimeout = setTimeout(() => {
-			this.setState({ isResizing: false });
-		}, timeout ? 500 : 0);
-		this.gallery.current.scrollLeft = window.innerWidth*1.5 - 10;
 	}
 
 	/* Mouse evts */
@@ -296,8 +299,8 @@ class MainView extends React.PureComponent {
 			<section className="animated">
 				<div
 					ref={this.gallery}
-					onMouseEnter={this.handleMouseEnter}
-					onMouseLeave={this.handleMouseLeave}
+					// onMouseEnter={this.handleMouseEnter}
+					// onMouseLeave={this.handleMouseLeave}
 					className="gallery-container"
 				>
 					{/* <Images /> */}

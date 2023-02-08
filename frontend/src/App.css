@@ -193,7 +193,6 @@ h1.title {
 	flex-direction: row;
 	box-sizing: border-box;
 	padding: 0.5rem;
-	overflow-x: scroll;
 
 	/* Hide scrollbar */
 	-ms-overflow-style: none;  /* Internet Explorer 10+ */
@@ -209,6 +208,13 @@ h1.title {
 		"s1 s1 s2 s2 s3 s4 s4 s7"
 		"s1 s1 s5 s5 s5 s5 s6 s7";
 	gap: 0.5rem;
+
+	animation: scroll-by 50s ease-in-out infinite;
+}
+@keyframes scroll-by {
+	0% { transform: translateX(-100%); }
+	50% { transform: translateX(0%); }
+	100% { transform: translateX(-100%); }
 }
 
 /* Images */
