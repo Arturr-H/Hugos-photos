@@ -1,15 +1,10 @@
 /* Imports */
 use actix_web::{ get, post, HttpResponse, Responder, web, HttpRequest };
 use std::{ fs::File, io::Write, sync::{Mutex, LockResult} };
-use image::{ DynamicImage, codecs::jpeg };
-use std::sync::Once;
 use uuid;
 use serde_json::json;
 use crate::appdata::{ AppData, Collection, Image };
 use regex;
-
-/* Magick rust */
-static START: Once = Once::new();
 
 /* Routes */
 #[get("/")]
