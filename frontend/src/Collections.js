@@ -48,7 +48,7 @@ export default class Collections extends React.PureComponent {
 
     render() {
         return (
-            <section className="collection-section">
+            <section id="#collections-section" className="collection-section">
                 <div className="collections">
                     {/* <div className="area"><CoverImage src={...} /></div> */}
                     {
@@ -59,7 +59,6 @@ export default class Collections extends React.PureComponent {
                         .map((key, index) => {
                             const collection = this.state.collections[key];
                             const coverImage = collection.cover_image;
-                            console.log(collection);
                             return (
                                 <div className="area" key={index}>
                                     <CoverImage _key={key} src={this.backendURL + "uploads-compressed/" + coverImage.pathname} title={this.convertToRealContent(collection.title)} date={coverImage.date} />
@@ -79,10 +78,6 @@ export class CoverImage extends React.PureComponent {
         /* Props */
         this.randomRotationOffset = 5;
         this.randomRotation = (Math.random() * this.randomRotationOffset) - this.randomRotationOffset/2;
-    }
-
-    componentDidMount() {
-        console.log(this.props.date);
     }
 
     render() {
