@@ -1,6 +1,6 @@
 :root {
-	--main: #000;
-	--inverted: #fff;
+	--main: #fff;
+	--inverted: #000;
 }
 @font-face {
 	font-family: GoodTimes;
@@ -9,7 +9,7 @@
 
 /* Main html elems */
 html, body {
-	background: var(--main);
+	background: var(--inverted);
 	padding: 0;
 	margin: 0;
 
@@ -359,7 +359,6 @@ a.download {
 		align-items: center;
 
 	height: 100%;
-	background: var(--inverted);
 
 	position: relative;
 	box-sizing: border-box;
