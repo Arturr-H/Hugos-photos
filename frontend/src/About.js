@@ -1,4 +1,5 @@
 import React from "react";
+import Icon from "./Icon";
 
 export default class About extends React.PureComponent {
     constructor(props) {
@@ -12,6 +13,15 @@ export default class About extends React.PureComponent {
     render() {
         return (
             <div className="about-container">
+                <a href="/" style={{
+                    position: "absolute",
+                    left: 20,
+                    top: 20,
+                    zIndex: 10,
+                    cursor: "pointer"
+                }}>
+                    <Icon size={48} icon="chevron-left" />
+                </a>
                 <h1 className="title upward">Hugo Sjögren</h1>
                 <p className="biography">
                     I am a 16-year-old photographer based in Stockholm, Sweden. <br />
