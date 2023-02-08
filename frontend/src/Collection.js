@@ -6,6 +6,7 @@ import {
     useParams
 } from "react-router-dom";
 import Icon from "./Icon";
+import { HashLink } from "react-router-hash-link";
 
 function withRouter(Component) {
     function ComponentWithRouterProp(props) {
@@ -131,7 +132,7 @@ class Collection extends React.PureComponent {
         return (
             <section className="collection-with-images">
                 <div className="collection-navbar">
-                    <a href="/"><img className="icon" src={require("./assets/icons/x.svg").default} alt="Close" /></a>
+                    <HashLink to="/#collections-section"><img className="icon" src={require("./assets/icons/x.svg").default} alt="Close" /></HashLink>
                     <h2 className="title">{this.convertToRealContent(this.state.collection.title)}</h2>
                     <h2 className="collection-size">{this.state.collection.images && this.state.collection.images.length} images</h2>
                 </div>
