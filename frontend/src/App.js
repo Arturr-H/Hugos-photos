@@ -13,6 +13,7 @@ class App extends React.PureComponent {
 		/* Changeable */
 		this.state = {
 			scrollPercentage: 0.0,
+			scrollPercentageNoRoof: 0.0,
 			showImage: {
 				active: false,
 				info: {
@@ -21,7 +22,8 @@ class App extends React.PureComponent {
 					datum: "",
 					kamera: ""
 				}
-			}
+			},
+			isMobile: false,
 		};
 
 		/* Refs */
@@ -65,8 +67,15 @@ class App extends React.PureComponent {
 
 	componentDidMount() {
 		this.main !== null && this.main.current.addEventListener("scroll", (e) => {
-			this.setState({ scrollPercentage: Math.min(e.target.scrollTop / window.innerHeight, 1) });
+			this.setState({
+				scrollPercentage: Math.min(e.target.scrollTop / window.innerHeight, 1),
+				scrollPercentageNoRoof: e.target.scrollTop / window.innerHeight,
+			});
 		})
+
+		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+			this.setState({ isMobile: true });
+		}
 
 		/* Remove active if click item not have className="TARGETABLE" */
 		document.addEventListener("click", (e) => {
@@ -140,7 +149,15 @@ class App extends React.PureComponent {
 					fontSize: Math.max(19.5 - (this.state.scrollPercentage * 32), 7) + "vmin",
 					letterSpacing: this.state.scrollPercentage * 10
 				}} className="title">
-					Hugo Sjögren
+					{(this.state.scrollPercentageNoRoof > 1.5 && this.state.isMobile) ? "" : "Hugo Sjögren"}
+					{this.state.scrollPercentageNoRoof > 1.5 ? <span style={{
+						width: ((this.state.scrollPercentageNoRoof - 1.5) * 100) + "vmin",
+						display: "inline-block",
+						overflow: "hidden",
+						whiteSpace: "nowrap",
+						height: 6.5 + "vmin",
+						transform: "translateY(0.2vmin)",
+					}}>/ Collections</span> : null}
 				</h1>
 				<main ref={this.main}>
 
@@ -179,12 +196,12 @@ class App extends React.PureComponent {
 				</main>
 
 				{/* Chevron down */}
-				<Icon
+				{this.state.scrollPercentageNoRoof < 1.5 ? <Icon
 					onClick={this.scrollDown}
 					className="chevron-down"
 					icon={this.state.scrollPercentage < 1 ? "chevron-down" : "chevron-down-white"}
 					size={80}
-				/>
+				/> : null}
 
 				{/* On image click */}
 				{ this.state.showImage.active ? <div className="image-show-background" ref={this.imageShow}>
