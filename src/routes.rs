@@ -1,7 +1,7 @@
 /* Imports */
 use actix_web::{ get, post, HttpResponse, Responder, web, HttpRequest };
 use std::{ fs::File, io::Write, sync::{Mutex, LockResult} };
-use magick_rust::{ MagickWand, magick_wand_genesis };
+use image::{ DynamicImage, codecs::jpeg };
 use std::sync::Once;
 use uuid;
 use serde_json::json;
@@ -135,23 +135,19 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
         Ok(e) => e,
         Err(_) => return payload_respond(4009)
     };
-    
-    START.call_once(|| {
-        magick_wand_genesis();
-    });
-    let wand = MagickWand::new();
-    match wand.read_image_blob(&bytes[payload_index..]) {
+
+    let img = match image::load_from_memory(&bytes[payload_index..]) {
         Ok(e) => e,
         Err(_) => return payload_respond(4010)
     };
-    let width = wand.get_image_width();
-    let height = wand.get_image_height();
+    let width = img.width();
+    let height = img.height();
 
     /* Resize */
-    wand.resize_image(width / 4, height / 4, 0);
+    let img = img.resize(width / 6, height / 6, image::imageops::FilterType::Nearest);
 
     /* Write to ./uploads-compressed */
-    match wand.write_image(&format!("uploads-compressed/{}.JPG", &image_id)) {
+    match img.save(&format!("uploads-compressed/{}.JPG", &image_id)) {
         Ok(e) => e,
         Err(_) => return payload_respond(4011)
     };
@@ -227,6 +223,7 @@ pub async fn get_collection(req: HttpRequest, appdata: web::Data<Mutex<AppData>>
 
 /* Utils */
 fn payload_respond(status:usize) -> HttpResponse {
+    dbg!(status);
     HttpResponse::Ok().json(json!({
         "status": status
     }))
