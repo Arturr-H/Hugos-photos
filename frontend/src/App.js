@@ -34,51 +34,36 @@ class App extends React.PureComponent {
 		this.images = [
 			{
 				src: require("./assets/images/compressed/Lingonberries.JPG"),
-				ort: "Dalarna",
 				datum: "12/06/22",
-				kamera: "Nikon 123xp6"
 			},
 			{
 				src: require("./assets/images/compressed/ForestWoman.JPG"),
-				ort: "Dalarna",
 				datum: "12/06/22",
-				kamera: "Nikon 123xp6"
 			},
 			{
 				src: require("./assets/images/compressed/Hayfield.JPG"),
-				ort: "Dalarna",
 				datum: "12/06/22",
-				kamera: "Nikon 123xp6"
 			},
 			{
 				src: require("./assets/images/compressed/Bee.JPG"),
-				ort: "Dalarna",
 				datum: "12/06/22",
-				kamera: "Nikon 123xp6"
 			},
 			{
 				src: require("./assets/images/compressed/SkyOcean.JPG"),
-				ort: "Dalarna",
 				datum: "12/06/22",
-				kamera: "Nikon 123xp6"
 			},
 			{
 				src: require("./assets/images/compressed/SkyOceanRain.JPG"),
-				ort: "Dalarna",
 				datum: "12/06/22",
-				kamera: "Nikon 123xp6"
 			},
 			{
 				src: require("./assets/images/compressed/Toadstool.JPG"),
-				ort: "Dalarna",
 				datum: "12/06/22",
-				kamera: "Nikon 123xp6"
 			 }
 		];
 	}
 
 	componentDidMount() {
-		this.onToggleDarkmode(true);
 		this.main !== null && this.main.current.addEventListener("scroll", (e) => {
 			this.setState({ scrollPercentage: Math.min(e.target.scrollTop / window.innerHeight, 1) });
 		})
@@ -143,18 +128,10 @@ class App extends React.PureComponent {
 		this.scrollToSection.current.scrollIntoView({ behavior: "smooth" });
 	}
 
-	/* Darkmode */
-	onToggleDarkmode = (to) => {
-		/* Set css variable */
-		document.documentElement.style.setProperty("--main", to ? "#fff" : "#000");
-		document.documentElement.style.setProperty("--inverted", to ? "#000" : "#fff");
-
-	}
-
 	render() {
 		return (
 			<div className="background">
-				<Navbar canToggleDarkmode={this.state.scrollPercentage < 0.5} onToggleDarkmode={this.onToggleDarkmode} />
+				<Navbar aboutMeVisible={this.state.scrollPercentage < 1}  />
 				
 				<h1 style={{
 					transform: "translateX(-50%) translateY(" +  ((-50) - this.state.scrollPercentage*-100) + "%)",
@@ -171,10 +148,15 @@ class App extends React.PureComponent {
 						this.state.scrollPercentage < 1 ?
 							<ScaledImage
 								blur={this.state.scrollPercentage * 10}
-								brightness={100 - this.state.scrollPercentage * 100}
+								brightness={110 - this.state.scrollPercentage * 100}
 								className={"fixed"}
 								source={require("./assets/images/default/SnowHouse.JPG")}
-							/> : null
+							/> : <ScaledImage
+								blur={10}
+								brightness={10}
+								className={"fixed"}
+								source={require("./assets/images/compressed/SnowHouse.JPG")}
+							/>
 					}
 
 					{/* Scrolling section hidden behind fixed image (never shown) */}
@@ -199,7 +181,7 @@ class App extends React.PureComponent {
 				<Icon
 					onClick={this.scrollDown}
 					className="chevron-down"
-					icon="chevron-down"
+					icon={this.state.scrollPercentage < 1 ? "chevron-down" : "chevron-down-white"}
 					size={80}
 				/>
 
@@ -213,16 +195,6 @@ class App extends React.PureComponent {
 								<Icon size={24} icon="calendar" />
 								<p className="TARGETABLE">Datum: </p>
 								<p className="TARGETABLE">{this.state.showImage.info.datum}</p>
-							</div>
-							<div className="TARGETABLE bit">
-								<Icon size={24} icon="map-pin" />
-								<p className="TARGETABLE">Ort: </p>
-								<p className="TARGETABLE">{this.state.showImage.info.ort}</p>
-							</div>
-							<div className="TARGETABLE bit">
-								<Icon size={24} icon="camera" />
-								<p className="TARGETABLE">Kamera: </p>
-								<p className="TARGETABLE">{this.state.showImage.info.kamera}</p>
 							</div>
 						</div>
 					</div>
