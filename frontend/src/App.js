@@ -20,7 +20,8 @@ class App extends React.PureComponent {
 					src: "",
 					ort: "",
 					datum: "",
-					kamera: ""
+					kamera: "",
+					src_no_compress: ""
 				}
 			},
 			isMobile: false,
@@ -36,30 +37,37 @@ class App extends React.PureComponent {
 		this.images = [
 			{
 				src: require("./assets/images/compressed/Lingonberries.JPG"),
+				src_no_compress: require("./assets/images/default/Lingonberries.JPG"),
 				datum: "12/06/22",
 			},
 			{
 				src: require("./assets/images/compressed/ForestWoman.JPG"),
+				src_no_compress: require("./assets/images/default/ForestWoman.JPG"),
 				datum: "12/06/22",
 			},
 			{
 				src: require("./assets/images/compressed/Hayfield.JPG"),
+				src_no_compress: require("./assets/images/default/Hayfield.JPG"),
 				datum: "12/06/22",
 			},
 			{
 				src: require("./assets/images/compressed/Bee.JPG"),
+				src_no_compress: require("./assets/images/default/Bee.JPG"),
 				datum: "12/06/22",
 			},
 			{
 				src: require("./assets/images/compressed/SkyOcean.JPG"),
+				src_no_compress: require("./assets/images/default/SkyOcean.JPG"),
 				datum: "12/06/22",
 			},
 			{
 				src: require("./assets/images/compressed/SkyOceanRain.JPG"),
+				src_no_compress: require("./assets/images/default/SkyOceanRain.JPG"),
 				datum: "12/06/22",
 			},
 			{
 				src: require("./assets/images/compressed/Toadstool.JPG"),
+				src_no_compress: require("./assets/images/default/Toadstool.JPG"),
 				datum: "12/06/22",
 			 }
 		];
@@ -129,7 +137,8 @@ class App extends React.PureComponent {
 					src: imgData.src,
 					ort: imgData.ort,
 					datum: imgData.datum,
-					kamera: imgData.kamera
+					kamera: imgData.kamera,
+					src_no_compress: imgData.src_no_compress
 				}
 			}
 		})
@@ -151,13 +160,13 @@ class App extends React.PureComponent {
 				}} className="title">
 					{(this.state.scrollPercentageNoRoof > 1.5 && this.state.isMobile) ? "" : "Hugo Sjögren"}
 					{this.state.scrollPercentageNoRoof > 1.5 ? <span style={{
-						width: ((this.state.scrollPercentageNoRoof - 1.5) * 100) + "vmin",
+						width: ((this.state.scrollPercentageNoRoof - 1.5) * 115) + "vmin",
 						display: "inline-block",
 						overflow: "hidden",
 						whiteSpace: "nowrap",
 						height: 6.5 + "vmin",
 						transform: "translateY(0.2vmin)",
-					}}>/ Collections</span> : null}
+					}}>/&nbsp;&nbsp;Collections</span> : null}
 				</h1>
 				<main ref={this.main}>
 
@@ -207,7 +216,7 @@ class App extends React.PureComponent {
 				{ this.state.showImage.active ? <div className="image-show-background" ref={this.imageShow}>
 					<div className="TARGETABLE container">
 						<Icon className="close" size={24} icon="x" onClick={this.closeShowImage} />
-						<img alt="backg" src={this.state.showImage.info.src} className="TARGETABLE image-show" />
+						<img alt="backg" src={this.state.showImage.info.src_no_compress} className="TARGETABLE image-show" />
 						<div className="TARGETABLE info">
 							<div className="TARGETABLE bit">
 								<Icon size={24} icon="calendar" />
