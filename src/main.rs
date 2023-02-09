@@ -2,14 +2,26 @@
 use std::sync::Mutex;
 use actix_web::{ App, HttpServer, web::{self, Data} };
 use actix_cors::Cors;
+use dotenv::dotenv;
+use lazy_static::lazy_static;
 
 /* Modules */
 mod routes;
 pub mod appdata;
 
+/* Static */
+lazy_static! {
+    pub static ref SECRET:String = std::env::var("SECRET").unwrap();
+}
+
 /* Main */
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv().unwrap();
+
+    /* Preload secret for checking */
+    let _ = &**SECRET;
+
     // appdata::AppData::new().save();
     let appdata = Data::new(Mutex::new(appdata::AppData::from_file()));
     HttpServer::new(move || {
