@@ -17,8 +17,8 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: Frontend.Dockerfile
+      context: ./frontend
+      dockerfile: ../Frontend.Dockerfile
 
     ## TODO: Switch this later - might not have cname for 8080
     ports:
