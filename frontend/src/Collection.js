@@ -168,7 +168,7 @@ class Collection extends React.PureComponent {
                                 <p className="TARGETABLE">Datum: </p>
                                 <p className="TARGETABLE">{this.state.showImage.info.datum}</p>
                             </div>
-                            <div className="TARGETABLE bit">
+                            {/* <div className="TARGETABLE bit">
                                 <Icon size={24} icon="map-pin" />
                                 <p className="TARGETABLE">Ort: </p>
                                 <p className="TARGETABLE">{this.state.showImage.info.ort}</p>
@@ -177,7 +177,7 @@ class Collection extends React.PureComponent {
                                 <Icon size={24} icon="camera" />
                                 <p className="TARGETABLE">Kamera: </p>
                                 <p className="TARGETABLE">{this.state.showImage.info.kamera}</p>
-                            </div>
+                            </div> */}
                         </div>
                         <a
                             href={this.state.showImage.info.src}
