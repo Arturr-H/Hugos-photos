@@ -357,6 +357,16 @@ a.download {
 	animation: chevron-down 3s infinite ease-in-out;
 }
 
+.bottom-text {
+	position: absolute;
+	bottom: 0;
+
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0 3vmin;
+	color: rgba(0, 0, 0, 0.552);
+}
+
 /* Collections */
 .collection-section {
 	display: flex;

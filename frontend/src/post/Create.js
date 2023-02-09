@@ -61,6 +61,8 @@ export default class Create extends React.PureComponent {
                 camera_: [],
                 place_: []
             }
+        }).then(e => {
+            alert(e.statusText)
         });
     }
     encodeItems = (item) => {
@@ -102,6 +104,18 @@ export default class Create extends React.PureComponent {
                 <div className="column">
                     {this.state.selectedFile ? <CoverImage date={this.state.date} title={this.state.title} src={this.state.preview} /> : <CoverImage date={this.state.date} title={this.state.title} />}
                 </div>
+
+                <p className="bottom-text">
+                    Hejsan hugo välkommen till sidan där du skapar kollektioner 🤯.
+                    Skriv in titel och datum, sen klicka *Select Cover* för att välja en bild som "thumbnail" för kollektionen.<br /><br />
+                    <b>Några saker att veta:</b><br />
+                    Datum-inputted får inte innehålla emojies / extrasymboler. Bara siffror bokstäver punkt, komma, bindestreck osv.
+                    Använd helst JPG:s istället för PNG:s (bilderna du tar med din kamera är automatiskt JPG 👍).
+                    Om du exempelvis vill lägga upp screenshots från din dator, skulle jag rekommendera att du 
+                    använder en sida som ex <a target="_blank" href="https://png2jpg.com/">https://png2jpg.com/</a> för att
+                    göra om dem till JPG:s, då screenshots oftast sparas som PNG:s. Om du har frågor är det såklart
+                    bara att ställa dem!
+                </p>
             </div>
         )
     }

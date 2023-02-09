@@ -159,6 +159,18 @@ export default class Add extends React.PureComponent {
                         />
                     )}
                 </div>
+
+                <p className="bottom-text">
+                    Hejsan hugo välkommen till sidan där du lägger till bilder i kollektioner du skapar 🤯.
+                    Först å främst, välj rätt kollektion högst uppe bland kollektionsväljaren 🌄. Efter det
+                    så klickar du <b>Select Images</b>, som öppnar upp ditt filsystem 📁 där du kan välja flera
+                    bilder samtidigt. Men välj helst max 10 bilder åt gången, och för att få bilderna att se
+                    bäst ut, använd JPG:s istället för PNG:s (bilderna du tar med din kamera är automatiskt JPG 👍).
+                    Om du exempelvis vill lägga upp screenshots från din dator, skulle jag rekommendera att du 
+                    använder en sida som ex <a target="_blank" href="https://png2jpg.com/">https://png2jpg.com/</a> för att
+                    göra om dem till JPG:s, då screenshots oftast sparas som PNG:s. Om du har frågor är det såklart
+                    bara att ställa dem!
+                </p>
             </div>
         )
     }
