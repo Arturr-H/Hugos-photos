@@ -12,6 +12,7 @@ serde_json = "1.0.91"
 actix-cors = "0.6.4"
 regex = "1.7.1"
 image = "0.24.5"
+dotenv = "0.15.0"
 
 # UUID-generator
 [dependencies.uuid]
