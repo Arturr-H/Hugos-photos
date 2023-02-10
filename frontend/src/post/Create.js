@@ -2,8 +2,9 @@
 import React from "react";
 import axios from "axios";
 import { CoverImage } from "../Collections";
+import Globals from "../Globals";
 
-const BACKEND_URL = "http://127.0.0.1:8080/";
+const BACKEND_URL = Globals.backendUrl;
 
 /* Main */
 export default class Create extends React.PureComponent {

@@ -1,8 +1,9 @@
 /* Imports */
 import React from "react";
 import axios from "axios";
+import Globals from "../Globals";
 
-const BACKEND_URL = "http://127.0.0.1:8080/";
+const BACKEND_URL = Globals.backendUrl;
 
 /* Main */
 export default class Add extends React.PureComponent {

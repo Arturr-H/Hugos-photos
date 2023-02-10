@@ -1,5 +1,6 @@
 /* Imports */
 import React from "react";
+import Globals from "./Globals";
 
 /* Main */
 export default class Collections extends React.PureComponent {
@@ -10,7 +11,7 @@ export default class Collections extends React.PureComponent {
         }
 
         /* Static */
-        this.backendURL = "http://127.0.0.1:8080/";
+        this.backendURL = Globals.backendUrl;
     }
     
     componentDidMount() {

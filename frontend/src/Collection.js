@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Icon from "./Icon";
 import { HashLink } from "react-router-hash-link";
+import Globals from "./Globals";
 
 function withRouter(Component) {
     function ComponentWithRouterProp(props) {
@@ -42,7 +43,7 @@ class Collection extends React.PureComponent {
         }
 
         /* Static */
-        this.backendURL = "http://127.0.0.1:8080/";
+        this.backendURL = Globals.backendUrl;
         this.id = this.props.router.params.id;
 
         this.imageShow = React.createRef();
