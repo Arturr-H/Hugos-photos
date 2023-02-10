@@ -3,3 +3,4 @@ Portfolio for his photos - Frontend written in `React.js`, backend written in ru
 
 <img src="./.github/screenshots/section-1.png">
 <img src="./.github/screenshots/section-2.png">
+<img src="./.github/screenshots/section-3.png">
