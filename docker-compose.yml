@@ -11,9 +11,10 @@ services:
 
     ## Image folders (save them in volume)
     volumes:
-      - /uploads:/usr/src/app/uploads
-      - /uploads-compressed:/usr/src/app/uploads-compressed
-      - /appdata:/usr/src/app/appdata
+      - appdata:/usr/src/appdata
+      # - /uploads:/usr/src/app/uploads
+      # - /uploads-compressed:/usr/src/app/uploads-compressed
+      # - /appdata/appdata:/usr/src/app/appdata
 
   frontend:
     build:
@@ -23,3 +24,6 @@ services:
     ## TODO: Switch this later - might not have cname for 8080
     ports:
       - "8080:8080"
+
+volumes:
+  appdata:
