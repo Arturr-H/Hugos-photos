@@ -50,22 +50,24 @@ export default class Collections extends React.PureComponent {
         return (
             <section id="#collections-section" className="collection-section">
                 <div className="collections">
-                    {/* <div className="area"><CoverImage src={...} /></div> */}
-                    {
-                        Object.keys(this.state.collections)
-                        .map(value => ({ value, sort: Math.random() }))
-                        .sort((a, b) => a.sort - b.sort)
-                        .map(({ value }) => value)
-                        .map((key, index) => {
-                            const collection = this.state.collections[key];
-                            const coverImage = collection.cover_image;
-                            return (
-                                <div className="area" key={index}>
-                                    <CoverImage _key={key} src={this.backendURL + "uploads-compressed/" + coverImage.pathname} title={this.convertToRealContent(collection.title)} date={coverImage.date} />
-                                </div>
-                            )
-                        })
-                    }
+                    <img alt="pin board" className="peg-board" src={require("./assets/images/pegboard.png")} />
+                    <div className="scroller">
+                        {
+                            Object.keys(this.state.collections)
+                            .map(value => ({ value, sort: Math.random() }))
+                            .sort((a, b) => a.sort - b.sort)
+                            .map(({ value }) => value)
+                            .map((key, index) => {
+                                const collection = this.state.collections[key];
+                                const coverImage = collection.cover_image;
+                                return (
+                                    <div className="area" key={index}>
+                                        <CoverImage _key={key} src={this.backendURL + "uploads-compressed/" + coverImage.pathname} title={this.convertToRealContent(collection.title)} date={coverImage.date} />
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
                 </div>
             </section>
         )
@@ -82,10 +84,17 @@ export class CoverImage extends React.PureComponent {
 
     render() {
         return (
-            <a href={"/collection/" + this.props._key} target="_blank" style={{ width: "min-content", position: "relative" }}>
+            <a rel="noreferrer" href={"/collection/" + this.props._key} target="_blank" style={{ width: "min-content", position: "relative" }}>
                 <img alt="pin" className="pin" src={require("./assets/icons/pin.png")} />
                 <div style={{ transform: "rotate(" + this.randomRotation + "deg)" }} className="cover-image-container">
-
+                    <img
+                        alt="note ending"
+                        src={require("./assets/images/note-ending.svg").default}
+                        className="note-ending"
+                        style={{
+                            transform: "translateY(-70%) scaleX(" + (Math.random() > 0.5 ? 1 : -1) + ")"
+                        }}
+                    />
                     <div className="cover-image">
                         <img alt="cover" src={this.props.src} />
                     </div>

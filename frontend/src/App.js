@@ -38,37 +38,37 @@ class App extends React.PureComponent {
 			{
 				src: require("./assets/images/compressed/Lingonberries.JPG"),
 				src_no_compress: require("./assets/images/default/Lingonberries.JPG"),
-				datum: "12/06/22",
+				datum: "Unknown",
 			},
 			{
 				src: require("./assets/images/compressed/ForestWoman.JPG"),
 				src_no_compress: require("./assets/images/default/ForestWoman.JPG"),
-				datum: "12/06/22",
+				datum: "Unknown",
 			},
 			{
 				src: require("./assets/images/compressed/Hayfield.JPG"),
 				src_no_compress: require("./assets/images/default/Hayfield.JPG"),
-				datum: "12/06/22",
+				datum: "Unknown",
 			},
 			{
 				src: require("./assets/images/compressed/Bee.JPG"),
 				src_no_compress: require("./assets/images/default/Bee.JPG"),
-				datum: "12/06/22",
+				datum: "Unknown",
 			},
 			{
 				src: require("./assets/images/compressed/SkyOcean.JPG"),
 				src_no_compress: require("./assets/images/default/SkyOcean.JPG"),
-				datum: "12/06/22",
+				datum: "Unknown",
 			},
 			{
 				src: require("./assets/images/compressed/SkyOceanRain.JPG"),
 				src_no_compress: require("./assets/images/default/SkyOceanRain.JPG"),
-				datum: "12/06/22",
+				datum: "Unknown",
 			},
 			{
 				src: require("./assets/images/compressed/Toadstool.JPG"),
 				src_no_compress: require("./assets/images/default/Toadstool.JPG"),
-				datum: "12/06/22",
+				datum: "Unknown",
 			 }
 		];
 	}
@@ -160,12 +160,13 @@ class App extends React.PureComponent {
 				}} className="title">
 					{(this.state.scrollPercentageNoRoof > 1.5 && this.state.isMobile) ? "" : "Hugo Sjögren"}
 					{this.state.scrollPercentageNoRoof > 1.5 ? <span style={{
-						width: ((this.state.scrollPercentageNoRoof - 1.5) * 115) + "vmin",
+						width: ((this.state.scrollPercentageNoRoof - 1.5) * 105) + "vmin",
 						display: "inline-block",
 						overflow: "hidden",
 						whiteSpace: "nowrap",
 						height: 6.5 + "vmin",
 						transform: "translateY(0.2vmin)",
+						textAlign: "right"
 					}}>/&nbsp;&nbsp;Collections</span> : null}
 				</h1>
 				<main ref={this.main}>
