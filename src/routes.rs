@@ -218,7 +218,6 @@ pub async fn get_collection(req: HttpRequest, appdata: web::Data<Mutex<AppData>>
 
 /* Utils */
 fn payload_respond(status:usize) -> HttpResponse {
-    dbg!(status);
     HttpResponse::Ok().json(json!({
         "status": status
     }))
