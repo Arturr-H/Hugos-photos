@@ -2,12 +2,14 @@ version: '3'
 
 services:
   backend:
+    container_name: hugos-photos-backend
+
     build:
       context: .
       dockerfile: Backend.Dockerfile
 
     ports:
-      - "8081:8081"
+      - "8082:8082"
 
     ## Image folders (save them in volume)
     volumes:
@@ -17,13 +19,24 @@ services:
       # - /appdata/appdata:/usr/src/app/appdata
 
   frontend:
+    container_name: hugos-photos-frontend
+
     build:
       context: ./frontend
       dockerfile: ../Frontend.Dockerfile
 
+    volumes:
+      - ./:/app
+      - /app/node_modules
+
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: npm start
+
     ## TODO: Switch this later - might not have cname for 8080
     ports:
-      - "8080:8080"
+      - 8080:8080
 
 volumes:
   appdata:
