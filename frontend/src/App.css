@@ -26,12 +26,13 @@ html, body {
 	/* Hide scrollbar */
 	-ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */
-
-	scroll-snap-type: mandatory;
-	scroll-snap-points-y: repeat(100vh);
-	scroll-snap-type: y mandatory;
 }main::-webkit-scrollbar { 
     display: none;  /* Safari and Chrome */
+}main.scrollsnap {
+	scroll-snap-type: mandatory;
+	scroll-snap-points-y: repeat(100%);
+	scroll-snap-type: y mandatory;
+	scroll-snap-stop: always;
 }
 .background {
 	background: var(--inverted);
@@ -43,7 +44,7 @@ section {
 	height: 100vh;
 	overflow: hidden;
 	position: relative;
-	scroll-snap-align: start;
+	scroll-snap-align: center;
 }section.animated {
 	animation: intro-section 1s forwards cubic-bezier(0.27, 0.45, 0.55, 0.99);
 }section h1 {
@@ -396,7 +397,6 @@ a.download {
 
 	/* background: var(--inverted); */
 
-	gap: 2rem;
 	box-sizing: border-box;
 	padding: 4.6vh;
 
@@ -408,7 +408,7 @@ a.download {
 }.collections > .scroller {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-	grid-template-rows: repeat(auto-fit, minmax(50vh, 1fr));
+	grid-template-rows: repeat(auto-fit, min-content);
 
 	overflow-y: scroll;
 	height: 100%;
@@ -416,7 +416,7 @@ a.download {
 	padding: 4.8vmin;
 }.collections > .scroller > .area {
 	width: 100%;
-	height: 100%;
+	height: min-content;
 
 	/* background: blue; */
 	display: flex;
@@ -426,6 +426,9 @@ a.download {
 	/* Hide scrollbar */
 	-ms-overflow-style: none;  /* IE and Edge */
 	scrollbar-width: none;  /* Firefox */
+
+	margin-bottom: 4vmin;
+	margin-top: 4vmin;
 }.collections > .area::-webkit-scrollbar {
 	display: none;  /* Chrome, Safari, Opera*/
 }

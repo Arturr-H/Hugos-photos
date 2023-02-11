@@ -32,6 +32,7 @@ class App extends React.PureComponent {
 		this.imageShow = React.createRef();
 		this.scrollToSection = React.createRef();
 		this.window = ["", "", "", "", "", "", ""];
+		this.isChrome = navigator.userAgent.indexOf("Chrome") !== -1;
 
 		/* Static */
 		this.images = [
@@ -106,7 +107,7 @@ class App extends React.PureComponent {
 			}
 		});
 	}
-	componentWillUnmount() { }
+	componentWillUnmount() {}
 	closeShowImage = () => {
 		this.imageShow.current && this.imageShow.current.animate([
 			{ opacity: 1 },
@@ -144,7 +145,12 @@ class App extends React.PureComponent {
 		})
 	}
 	scrollDown = () => {
-		this.scrollToSection.current.scrollIntoView({ behavior: "smooth" });
+		if (!this.scrollToSection.current) return;
+		if (this.isChrome) {
+			this.scrollToSection.current.scrollIntoView();
+		}else {
+			this.scrollToSection.current.scrollIntoView({ behavior: "smooth" });
+		}
 	}
 
 	render() {
@@ -152,24 +158,37 @@ class App extends React.PureComponent {
 			<div className="background">
 				<Navbar aboutMeVisible={this.state.scrollPercentage < 1}  />
 				
-				<h1 style={{
-					transform: "translateX(-50%) translateY(" +  ((-50) - this.state.scrollPercentage*-100) + "%)",
-					top: (50 - this.state.scrollPercentage*50) + "%",
-					fontSize: Math.max(19.5 - (this.state.scrollPercentage * 32), 7) + "vmin",
-					letterSpacing: this.state.scrollPercentage * 10
-				}} className="title">
-					{(this.state.scrollPercentageNoRoof > 1.5 && this.state.isMobile) ? "" : "Hugo Sjögren"}
-					{this.state.scrollPercentageNoRoof > 1.5 ? <span style={{
-						width: ((this.state.scrollPercentageNoRoof - 1.5) * 105) + "vmin",
-						display: "inline-block",
-						overflow: "hidden",
-						whiteSpace: "nowrap",
-						height: 6.5 + "vmin",
-						transform: "translateY(0.2vmin)",
-						textAlign: "right"
-					}}>/&nbsp;&nbsp;Collections</span> : null}
-				</h1>
-				<main ref={this.main}>
+				{
+					this.isChrome
+
+					/* Is chrome */
+					? <h1 style={{
+						transform: "translateX(-50%) translateY(-50%)",
+						top: "50%",
+					}} className="title">
+						{ this.state.scrollPercentageNoRoof > .5 ? "" : "Hugo Sjögren" }
+					</h1>
+
+					/* Non chrome */
+					: <h1 style={{
+						transform: "translateX(-50%) translateY(" +  ((-50) - this.state.scrollPercentage*-100) + "%)",
+						top: (50 - this.state.scrollPercentage*50) + "%",
+						fontSize: Math.max(19.5 - (this.state.scrollPercentage * 32), 7) + "vmin",
+						letterSpacing: this.state.scrollPercentage * 10
+					}} className="title">
+						{(this.state.scrollPercentageNoRoof > 1.5 && this.state.isMobile) ? "" : "Hugo Sjögren"}
+						{this.state.scrollPercentageNoRoof > 1.5 ? <span style={{
+							width: ((this.state.scrollPercentageNoRoof - 1.5) * 105) + "vmin",
+							display: "inline-block",
+							overflow: "hidden",
+							whiteSpace: "nowrap",
+							height: 6.5 + "vmin",
+							transform: "translateY(0.2vmin)",
+							textAlign: "right"
+						}}>/&nbsp;&nbsp;Collections</span> : null}
+					</h1>
+				}
+				<main ref={this.main} className={this.isChrome ? "" : "scrollsnap"}>
 
 					{/* Only show if not completly dark */}
 					{
@@ -192,13 +211,19 @@ class App extends React.PureComponent {
 
 					{/* Play intro animation upon visibility */}
 					{
-						this.state.scrollPercentage >= 1 ?
+						this.isChrome
+						? <MainView
+							triggerImageSelect={this.triggerImageSelect}
+							images={this.images}
+							showImageActive={this.state.showImage.active}
+						/>
+						: (this.state.scrollPercentage >= 1 ?
 							<MainView
 								triggerImageSelect={this.triggerImageSelect}
 								images={this.images}
 								showImageActive={this.state.showImage.active}
 							/>
-							: <section ref={this.scrollToSection}></section>
+							: <section ref={this.scrollToSection}></section>)
 					}
 
 					{/* Collections section */}
