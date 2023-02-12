@@ -33,6 +33,7 @@ async fn main() -> std::io::Result<()> {
 
             /* Routes */
             .service(routes::upload)
+            .service(routes::check_auth)
             .service(routes::index)
             .service(routes::collections)
             .service(routes::delete)
