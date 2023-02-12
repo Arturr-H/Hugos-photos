@@ -589,6 +589,8 @@ a.download {
 
 	font-family: 'Bebas Neue', cursive;
 	font-size: 3vmax;
+}.row-hover {
+	outline: 1rem rgb(41, 109, 212) solid;
 }
 
 /* Create */
