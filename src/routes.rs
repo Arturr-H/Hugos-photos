@@ -15,6 +15,15 @@ pub async fn index() -> impl Responder {
 /* Create: `title`(bytes) `date_` `camera_`(bytes) `place_`(bytes) and body(bytes) */
 #[post("/upload-single")]
 pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes: web::Bytes) -> impl Responder {
+    if let Some(token) = req.headers().get("_token") {
+        if &**SECRET != token {
+            return HttpResponse::Ok().json(json!({
+                "status": 499,
+                "message": "INVALID TOKEN YOU ARE PROBABLY NOT HUGO! (Om du är hugo - resetta din AUTH. Om du inte vet hur fråga mig)",
+            }))
+        };
+    };
+
     /* Create file and write to it */
     let image_id = uuid::Uuid::new_v4().to_string();
     let date_regex = regex::Regex::new(r"\d{4}:\d{2}:\d{2} \d{2}:\d{2}").expect("This should compile unless versions are changed");
