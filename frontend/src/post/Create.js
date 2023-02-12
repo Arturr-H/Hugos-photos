@@ -57,13 +57,15 @@ export default class Create extends React.PureComponent {
         
         axios.post(BACKEND_URL + "upload-single", formData, {
             headers: {
+                _token: this.getCookie("_token"),
                 title: this.encodeItems(this.state.title).toString(),
                 date_: this.state.date,
                 camera_: [],
                 place_: []
             }
         }).then(e => {
-            alert(e.statusText)
+            console.log(e.data.message);
+            alert(e.data.message)
         });
     }
     encodeItems = (item) => {
@@ -85,6 +87,22 @@ export default class Create extends React.PureComponent {
 
         return result;
     };
+    getCookie = (cname) => {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
     render() {
         return (
             <div className="create">
