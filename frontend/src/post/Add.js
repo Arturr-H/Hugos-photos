@@ -90,25 +90,24 @@ export default class Add extends React.PureComponent {
     };
     submitImage = (index) => {
         const formData = new FormData();
-
         formData.append(
             "image",
             this.state.selectedFiles[index],
             this.state.selectedFiles[index].name
         );
 
-        console.log("TITLE", this.state.images[index].title);
         axios.post(BACKEND_URL + "upload-single", formData, {
             headers: {
                 title: this.encodeItems(this.state.images[index].title).toString(),
                 date_: new Date().getUTCMilliseconds(),
+                _token: this.getCookie("_token"),
                 camera_: [],
                 place_: [],
                 collection: this.state.postToCollectionHash
             }
         }).then(() => {
             let imgs = this.state.images;
-            imgs[index].uploaded = true
+            imgs[index].uploaded = true;
 
             this.setState({ images: [...imgs] });
         });
@@ -124,6 +123,21 @@ export default class Add extends React.PureComponent {
     encodeItems = (item) => {
         let utf8Encode = new TextEncoder();
         return Array.from(utf8Encode.encode(item));
+    }
+    getCookie = (cname) => {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
     }
 
     render() {
