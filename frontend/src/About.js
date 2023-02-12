@@ -35,7 +35,7 @@ export default class About extends React.PureComponent {
                     There is no intention to make any money from this at all as it is truly a passion of mine and it gives me great enjoyment that these photos can be shared with the public.
                     The photos can be used in whatever way you'd like but it would be a pleasure if you credit me if you use them for a commercial purpose.
                     <br /><br />
-                    Instagram: <a href="https://www.instagram.com/hugosjogren06/">@hugosjogren06</a>
+                    For business inquires, please reach out to <a href="mailto: hugosjogren06@gmail.com">hugosjogren06@gmail.com</a>
                 </p>
                 <img className="image" src={require("./assets/images/profile.JPG")} />
             </div>
