@@ -25,12 +25,18 @@ class App extends React.PureComponent {
 				}
 			},
 			isMobile: false,
+
+			/* To know where the chevron down arrow should scroll to */
+			section: 0,
 		};
 
 		/* Refs */
 		this.main = React.createRef();
 		this.imageShow = React.createRef();
 		this.scrollToSection = React.createRef();
+		this.collectionsSection = React.createRef();
+
+
 		this.window = ["", "", "", "", "", "", ""];
 		this.isChrome = navigator.userAgent.indexOf("Chrome") !== -1;
 
@@ -76,10 +82,13 @@ class App extends React.PureComponent {
 
 	componentDidMount() {
 		this.main !== null && this.main.current.addEventListener("scroll", (e) => {
+			let a = e.target.scrollTop / window.innerHeight;
 			this.setState({
-				scrollPercentage: Math.min(e.target.scrollTop / window.innerHeight, 1),
-				scrollPercentageNoRoof: e.target.scrollTop / window.innerHeight,
+				scrollPercentage: Math.min(a, 1),
+				scrollPercentageNoRoof: a,
+				section: Math.floor(a)
 			});
+
 		})
 
 		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -145,11 +154,10 @@ class App extends React.PureComponent {
 		})
 	}
 	scrollDown = () => {
-		if (!this.scrollToSection.current) return;
-		if (this.isChrome) {
-			this.scrollToSection.current.scrollIntoView();
+		if (this.state.section == 0) {
+			document.getElementById("image-gallery").scrollIntoView({ behavior: "smooth" });
 		}else {
-			this.scrollToSection.current.scrollIntoView({ behavior: "smooth" });
+			document.getElementById("collections-ref-container").scrollIntoView({ behavior: "smooth" });
 		}
 	}
 
@@ -158,36 +166,24 @@ class App extends React.PureComponent {
 			<div className="background">
 				<Navbar aboutMeVisible={this.state.scrollPercentage < 1}  />
 				
-				{
-					this.isChrome
+				<h1 style={{
+					transform: "translateX(-50%) translateY(" +  ((-50) - this.state.scrollPercentage*-100) + "%)",
+					top: (50 - this.state.scrollPercentage*50) + "%",
+					fontSize: Math.max(19.5 - (this.state.scrollPercentage * 32), 7) + "vmin",
+					letterSpacing: this.state.scrollPercentage * 10
+				}} className="title">
+					{(this.state.scrollPercentageNoRoof > 1.5 && this.state.isMobile) ? "" : "Hugo Sjögren"}
+					{this.state.scrollPercentageNoRoof > 1.5 ? <span style={{
+						width: ((this.state.scrollPercentageNoRoof - 1.5) * 105) + "vmin",
+						display: "inline-block",
+						overflow: "hidden",
+						whiteSpace: "nowrap",
+						height: 6.5 + "vmin",
+						transform: "translateY(0.2vmin)",
+						textAlign: "right"
+					}}>/&nbsp;&nbsp;Collections</span> : null}
+				</h1>
 
-					/* Is chrome */
-					? <h1 style={{
-						transform: "translateX(-50%) translateY(-50%)",
-						top: "50%",
-					}} className="title">
-						{ this.state.scrollPercentageNoRoof > .5 ? "" : "Hugo Sjögren" }
-					</h1>
-
-					/* Non chrome */
-					: <h1 style={{
-						transform: "translateX(-50%) translateY(" +  ((-50) - this.state.scrollPercentage*-100) + "%)",
-						top: (50 - this.state.scrollPercentage*50) + "%",
-						fontSize: Math.max(19.5 - (this.state.scrollPercentage * 32), 7) + "vmin",
-						letterSpacing: this.state.scrollPercentage * 10
-					}} className="title">
-						{(this.state.scrollPercentageNoRoof > 1.5 && this.state.isMobile) ? "" : "Hugo Sjögren"}
-						{this.state.scrollPercentageNoRoof > 1.5 ? <span style={{
-							width: ((this.state.scrollPercentageNoRoof - 1.5) * 105) + "vmin",
-							display: "inline-block",
-							overflow: "hidden",
-							whiteSpace: "nowrap",
-							height: 6.5 + "vmin",
-							transform: "translateY(0.2vmin)",
-							textAlign: "right"
-						}}>/&nbsp;&nbsp;Collections</span> : null}
-					</h1>
-				}
 				<main ref={this.main} className={this.isChrome ? "" : "scrollsnap"}>
 
 					{/* Only show if not completly dark */}
@@ -213,21 +209,25 @@ class App extends React.PureComponent {
 					{
 						this.isChrome
 						? <MainView
+							id="image-gallery"
 							triggerImageSelect={this.triggerImageSelect}
 							images={this.images}
 							showImageActive={this.state.showImage.active}
 						/>
 						: (this.state.scrollPercentage >= 1 ?
 							<MainView
+								id="image-gallery"
 								triggerImageSelect={this.triggerImageSelect}
 								images={this.images}
 								showImageActive={this.state.showImage.active}
 							/>
-							: <section ref={this.scrollToSection}></section>)
+							: <section id="image-gallery" ref={this.scrollToSection}></section>)
 					}
 
 					{/* Collections section */}
-					<Collections scroll={this.state.scrollPercentage} />
+					<div className="collections-ref-container" id="collections-ref-container" ref={this.collectionsSection}>
+						<Collections scroll={this.state.scrollPercentage} />
+					</div>
 				</main>
 
 				{/* Chevron down */}
@@ -348,7 +348,7 @@ class MainView extends React.PureComponent {
 
 	render() {
 		return (
-			<section className="animated">
+			<section className="animated" id={this.props.id}>
 				<div
 					ref={this.gallery}
 					// onMouseEnter={this.handleMouseEnter}

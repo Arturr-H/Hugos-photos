@@ -891,6 +891,11 @@ form > input[type="file"] {
 	right: 2vmin;
 }
 
+.collections-ref-container {
+	width: 100%;
+	height: 100%;
+}
+
 /* Media queries */
 @media screen and (max-width: 800px) {
 	nav {
