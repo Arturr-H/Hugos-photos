@@ -3,7 +3,7 @@ use actix_web::{ get, post, HttpResponse, Responder, web, HttpRequest };
 use std::{ fs::File, io::Write, sync::{Mutex, LockResult} };
 use uuid;
 use serde_json::json;
-use crate::appdata::{ AppData, Collection, Image };
+use crate::{appdata::{ AppData, Collection, Image }, SECRET};
 use regex;
 
 /* Routes */
@@ -153,6 +153,39 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
         "message": "Created Collection!",
         "collection-id": &uuid
     }))
+}
+
+#[post("/check-auth")]
+pub async fn check_auth(_req: HttpRequest, bytes: web::Bytes) -> impl Responder {
+    /* Create file and write to it */
+    let payload_index = match bytes
+        .windows(5)
+        .position(|w| matches!(w, b"START"))
+        .map(|ix| ix + 5) {
+            Some(e) => e,
+            None => return payload_respond(4008)
+        };
+    let end_index = match bytes
+        .windows(3)
+        .position(|w| matches!(w, b"END"))
+        .map(|ix| ix) {
+            Some(e) => e,
+            None => return payload_respond(4008)
+        };
+    let bytes = &bytes[payload_index..end_index];
+    if bytes == SECRET.as_bytes() {
+        /* Respond */
+        HttpResponse::Ok().json(json!({
+            "status": 200,
+            "message": "Auth success!",
+            "token": &**SECRET
+        }))
+    }else {
+        HttpResponse::Ok().json(json!({
+            "status": 400,
+            "message": "Auth failed",
+        }))
+    }
 }
 
 /* Return all documents */
