@@ -36,9 +36,8 @@ export default class Post extends React.PureComponent {
             );
             
             axios.post(Globals.backendUrl + "check-auth", formData, {}).then(e => {
-                if (e.data.status == 200) {
-                    console.log(e.data);
-                    this.setCookie("token", e.data.token, 7);
+                if (e.data.status === 200) {
+                    this.setCookie("_token", e.data.token, 7);
                 }
                 alert(e.data.message);
             });
