@@ -11,10 +11,6 @@ import About from "./About";
 /* Router */
 const router = createBrowserRouter([
 	{
-		path: "/",
-		element: <App />,
-	},
-	{
 		path: "/post",
 		element: <Post />,
 	},
@@ -33,6 +29,10 @@ const router = createBrowserRouter([
 	{
 		path: "/about",
 		element: <About />,
+	},
+	{
+		path: "/:location?",
+		element: <App />,
 	},
 ]);
 

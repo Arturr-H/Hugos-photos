@@ -133,7 +133,7 @@ class Collection extends React.PureComponent {
         return (
             <section className="collection-with-images">
                 <div className="collection-navbar">
-                    <HashLink to="/#collections-section"><img className="icon" src={require("./assets/icons/x.svg").default} alt="Close" /></HashLink>
+                    <a href="/collections"><img className="icon" src={require("./assets/icons/x.svg").default} alt="Close" /></a>
                     <h2 className="title">{this.convertToRealContent(this.state.collection.title)}</h2>
                     <h2 className="collection-size">{this.state.collection.images && this.state.collection.images.length} images</h2>
                 </div>

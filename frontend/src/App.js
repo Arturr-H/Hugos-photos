@@ -4,6 +4,11 @@ import Navbar from "./Nav";
 import ScaledImage from "./ScaledImage";
 import Icon from "./Icon";
 import Collections from "./Collections";
+import {
+    useLocation,
+    useNavigate,
+    useParams
+} from "react-router-dom";
 
 /* Main */
 class App extends React.PureComponent {
@@ -39,6 +44,7 @@ class App extends React.PureComponent {
 
 		this.window = ["", "", "", "", "", "", ""];
 		this.isChrome = navigator.userAgent.indexOf("Chrome") !== -1;
+		this.location = this.props.router.params.location;
 
 		/* Static */
 		this.images = [
@@ -81,6 +87,10 @@ class App extends React.PureComponent {
 	}
 
 	componentDidMount() {
+		if (this.location === "collections") {
+			this.collectionsSection.current.scrollIntoView({ behavior: "smooth" });
+		}
+		
 		this.main !== null && this.main.current.addEventListener("scroll", (e) => {
 			let a = e.target.scrollTop / window.innerHeight;
 			this.setState({
@@ -429,7 +439,21 @@ class Image extends React.PureComponent {
 	}
 }
 
+function withRouter(Component) {
+    function ComponentWithRouterProp(props) {
+        let location = useLocation();
+        let navigate = useNavigate();
+        let params = useParams();
+        return (
+            <Component
+                {...props}
+                router={{ location, navigate, params }}
+            />
+        );
+    }
 
+    return ComponentWithRouterProp;
+}
 
 /* Exports */
-export default App;
+export default withRouter(App);
