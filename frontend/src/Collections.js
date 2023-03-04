@@ -85,7 +85,7 @@ export class CoverImage extends React.PureComponent {
 
     render() {
         return (
-            <a rel="noreferrer" href={"/collection/" + this.props._key} target="_blank" style={{ width: "min-content", position: "relative" }}>
+            <a rel="noreferrer" href={"/collection/" + this.props._key} style={{ width: "min-content", position: "relative" }}>
                 <img alt="pin" className="pin" src={require("./assets/icons/pin.png")} />
                 <div style={{ transform: "rotate(" + this.randomRotation + "deg)" }} className="cover-image-container">
                     <img
