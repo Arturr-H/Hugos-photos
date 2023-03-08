@@ -208,7 +208,26 @@ pub async fn collections(appdata: web::Data<Mutex<AppData>>) -> impl Responder {
     )
 }
 
-/* *CLEAR* all documents */
+/* Remove a collection (requires AUTH) */
+pub async fn delete_collection(req: HttpRequest, appdata: web::Data<Mutex<AppData>>) -> impl Responder {
+    let col = req.match_info().get("collection").unwrap_or("");
+
+    match match appdata.lock() {
+        LockResult::Ok(e) => e,
+        LockResult::Err(_) => return payload_respond(4019)
+    }.collections.remove(col) {
+        Some(_) => HttpResponse::Ok().json(json!({
+            "status": 200,
+            "message": "Deleted collections",
+        })),
+        None => HttpResponse::Ok().json(json!({
+            "status": 404,
+            "message": "No collection found",
+        }))
+    }
+}
+
+/* *CLEAR* all documents TODO: Delete this route later */
 #[get("/delete-all")]
 pub async fn delete(appdata: web::Data<Mutex<AppData>>) -> impl Responder {
     *match appdata.lock() {
