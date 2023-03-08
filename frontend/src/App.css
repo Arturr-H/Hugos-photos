@@ -210,7 +210,7 @@ h1.title {
 		"s1 s1 s5 s5 s5 s5 s6 s7";
 	gap: 0.5rem;
 
-	animation: scroll-by 50s ease-in-out infinite;
+	/* animation: scroll-by 50s ease-in-out infinite; */
 }
 @keyframes scroll-by {
 	0% { transform: translateX(-100%); }
