@@ -9,6 +9,7 @@ import {
     useNavigate,
     useParams
 } from "react-router-dom";
+import ScrollContainer from "react-indiana-drag-scroll"
 
 /* Main */
 class App extends React.PureComponent {
@@ -164,7 +165,7 @@ class App extends React.PureComponent {
 		})
 	}
 	scrollDown = () => {
-		if (this.state.section == 0) {
+		if (this.state.section === 0) {
 			document.getElementById("image-gallery").scrollIntoView({ behavior: "smooth" });
 		}else {
 			document.getElementById("collections-ref-container").scrollIntoView({ behavior: "smooth" });
@@ -253,13 +254,20 @@ class App extends React.PureComponent {
 					<div className="TARGETABLE container">
 						<Icon className="close" size={24} icon="x" onClick={this.closeShowImage} />
 						<img alt="backg" src={this.state.showImage.info.src_no_compress} className="TARGETABLE image-show" />
-						<div className="TARGETABLE info">
-							<div className="TARGETABLE bit">
-								<Icon size={24} icon="calendar" />
-								<p className="TARGETABLE">Datum: </p>
-								<p className="TARGETABLE">{this.state.showImage.info.datum}</p>
-							</div>
-						</div>
+
+						{/* Needed for margin */}
+						<div className="TARGETABLE info"></div>
+
+						{/* Download */}
+						<a
+                            href={this.state.showImage.info.src}
+                            className="TARGETABLE download"
+                            download
+                            onClick={e => this.download(e)}
+                        >
+                            <p className="TARGETABLE">Download</p>
+                            <Icon className="TARGETABLE" size={24} icon="download" />
+                        </a>
 					</div>
 					<img alt="blur" src={this.images[0]} className="TARGETABLE image-show-blur" />
 				</div> : null }
@@ -282,94 +290,21 @@ class MainView extends React.PureComponent {
 
 		/* Refs */
 		this.gallery = React.createRef();
-		this.widthGrabber = React.createRef();
-
-		/* Bindings */
-		this.handleMouseEnter = this.handleMouseEnter.bind(this);
-		this.handleMouseLeave = this.handleMouseLeave.bind(this);
-	}
-
-	componentDidMount() {
-		// if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-		// 	/* Mobile */
-		// }else {
-		// 	/* Resize event */
-		// 	window.addEventListener("resize", this.onResize);
-
-		// 	/* Scroll evts */
-		// 	this.gallery.current.scrollLeft = window.innerWidth*1.5 + 11;
-		// 	this.gallery && this.gallery.current.addEventListener("scroll", (e) => {
-		// 		let s = this.widthGrabber.current.offsetWidth - 140;
-
-		// 		let scrollDistance = (e.target.scrollLeft - s) / s;
-		// 		if (scrollDistance > 1) { this.onResize(false); }
-		// 		else { this.setState({ scrollDistance }); }
-		// 	})
-			
-			// this.intervalId = setInterval(() => {
-			// 	if (this.state.autoScroll && !this.state.isResizing && !this.props.showImageActive) {
-			// 		this.gallery.current.scrollLeft += 2;
-			// 	}
-			// }, 10);
-		// }
-
-		// this.intervalId = setInterval(() => {
-		// 	let next = this.state.galleryScrollPercentage + 0.06;
-		// 	if (next >= 0) {
-		// 		this.setState({ galleryScrollPercentage: -100 });
-		// 	}else {
-		// 		this.setState({ galleryScrollPercentage: next });
-		// 	}
-		// }, 8);
-	}
-	componentWillUnmount() {
-		// clearInterval(this.intervalId);
-		clearInterval(this.resizeTimeout);
-	}
-
-	/* Mouse evts */
-	handleMouseEnter() {
-		this.setState({ autoScroll: false });
-
-		/* Fade out scrolling exponentially */
-		let additionalScrollFactor = 4;
-
-		let scrollInterval = setInterval(() => {
-			additionalScrollFactor *= 0.9;
-
-			this.gallery.current && (this.gallery.current.scrollLeft += additionalScrollFactor);
-			if (additionalScrollFactor < 0.05) { clearInterval(scrollInterval); }
-		}, 20);
-	}
-	handleMouseLeave() {
-		/* Fade in scrolling exponentially */
-		let additionalScrollFactor = 1;
-
-		let scrollInterval = setInterval(() => {
-			additionalScrollFactor *= 1.1;
-
-			this.gallery.current && (this.gallery.current.scrollLeft += additionalScrollFactor);
-			if (additionalScrollFactor > 3) {
-				this.setState({ autoScroll: true });
-				clearInterval(scrollInterval);
-			}
-		}, 20);
 	}
 
 	render() {
 		return (
 			<section className="animated" id={this.props.id}>
-				<div
+				<ScrollContainer
+					horizontal={true}
 					ref={this.gallery}
-					// onMouseEnter={this.handleMouseEnter}
-					// onMouseLeave={this.handleMouseLeave}
 					className="gallery-container"
 				>
+					
 					{/* <Images /> */}
-					<Images ref_={this.widthGrabber} images={this.props.images} triggerImageSelect={this.props.triggerImageSelect} />
 					<Images images={this.props.images} triggerImageSelect={this.props.triggerImageSelect} />
 					<Images images={this.props.images} triggerImageSelect={this.props.triggerImageSelect} />
-				</div>
+				</ScrollContainer>
 			</section>
 		);
 	}
@@ -392,7 +327,7 @@ class Images extends React.PureComponent {
 
 	render() {
 		return (
-			<div className="images-container" ref={this.props.ref_}>
+			<div className="images-container">
 				{
 					this.props.images.map((data, index) => 
 						<Image
