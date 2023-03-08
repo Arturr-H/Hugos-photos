@@ -1013,11 +1013,11 @@ form > input[type="file"] {
 /* Rotation Dangle aniation */
 @keyframes rotate-dangle {
 	0% { transform: rotate(0deg); }
-	10% { transform: rotate(3.75deg); }
-	20% { transform: rotate(-2.75deg); }
-	30% { transform: rotate(1.75deg); }
-	40% { transform: rotate(-0.75deg); }
-	50% { transform: rotate(0.25deg); }
-	60% { transform: rotate(-0.125deg); }
+	10% { transform: rotate(1.875deg); }
+	20% { transform: rotate(-1.375deg); }
+	30% { transform: rotate(0.875deg); }
+	40% { transform: rotate(-0.375deg); }
+	50% { transform: rotate(0.125deg); }
+	60% { transform: rotate(-0.0625deg); }
 	70% { transform: rotate(0deg); }
 }
