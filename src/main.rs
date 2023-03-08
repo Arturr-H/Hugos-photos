@@ -37,6 +37,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::index)
             .service(routes::collections)
             .service(routes::delete)
+            .route("/delete-collection/{collection:.*}", web::get().to(routes::delete_collection))
 
             /* Static files (/uploads) */
             .route("/uploads/{filename:.*}", web::get().to(routes::static_files))
