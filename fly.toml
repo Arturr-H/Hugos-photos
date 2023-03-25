@@ -1,16 +1,13 @@
-# fly.toml file generated for hugos-photos-backend on 2023-03-12T19:48:38+01:00
+# fly.toml file generated for hugos-photos-backend on 2023-03-24T00:39:58+01:00
 
 app = "hugos-photos-backend"
 kill_signal = "SIGINT"
 kill_timeout = 5
+primary_region = "ams"
 processes = []
 
 [build]
-  dockerfile = "./Backend.Dockerfile"
-
-[mounts]
-  source="image_volume"
-  destination="/data"
+  dockerfile = "Backend.Dockerfile"
 
 [env]
   PORT = "8080"
@@ -18,6 +15,10 @@ processes = []
 [experimental]
   auto_rollback = true
   cmd = "./hugos-photos"
+
+[mounts]
+  destination = "mount"
+  source = "image_volume"
 
 [[services]]
   http_checks = []
