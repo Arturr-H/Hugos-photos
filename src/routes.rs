@@ -22,6 +22,11 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
                 "message": "INVALID TOKEN YOU ARE PROBABLY NOT HUGO! (Om du är hugo - resetta din AUTH. Om du inte vet hur fråga mig)",
             }))
         };
+    }else {
+        return HttpResponse::Ok().json(json!({
+            "status": 499,
+            "message": "INVALID TOKEN YOU ARE PROBABLY NOT HUGO! (Om du är hugo - resetta din AUTH. Om du inte vet hur fråga mig)",
+        }))
     };
 
     /* Create file and write to it */
@@ -123,7 +128,7 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
     };
 
     /* Write to file - once all criteria meet */
-    let mut file = match File::create(format!("uploads/{}.JPG", &image_id)) {
+    let mut file = match File::create(format!("./mount/uploads/{}.JPG", &image_id)) {
         Ok(e) => e,
         Err(_) => return payload_respond(4007)
     };
@@ -140,6 +145,10 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
         Err(_) => return payload_respond(4009)
     };
 
+
+    // COMPRESSED >>>>>>>>>>>>>>>>>>>
+
+
     let img = match image::load_from_memory(&bytes[payload_index..]) {
         Ok(e) => e,
         Err(_) => return payload_respond(4010)
@@ -151,7 +160,7 @@ pub async fn upload(req: HttpRequest, appdata: web::Data<Mutex<AppData>>, bytes:
     let img = img.resize(width / 6, height / 6, image::imageops::FilterType::Nearest);
 
     /* Write to ./uploads-compressed */
-    match img.save(&format!("uploads-compressed/{}.JPG", &image_id)) {
+    match img.save(&format!("./mount/uploads-compressed/{}.JPG", &image_id)) {
         Ok(e) => e,
         Err(_) => return payload_respond(4011)
     };
@@ -247,7 +256,7 @@ pub async fn static_files(req: HttpRequest) -> impl Responder {
     let path = req.match_info().get("filename").unwrap_or("warning");
     HttpResponse::Ok().content_type("image/jpg").body(
         match std::fs::read(
-            format!("./uploads/{}.JPG", path)
+            format!("./mount/uploads/{}.JPG", path)
         ) {
             Ok(e) => e,
             Err(_) => return payload_respond(4014),
@@ -258,7 +267,7 @@ pub async fn static_files_compressed(req: HttpRequest) -> impl Responder {
     let path = req.match_info().get("filename").unwrap_or("warning");
     HttpResponse::Ok().content_type("image/jpg").body(
         match std::fs::read(
-            format!("./uploads-compressed/{}.JPG", path)
+            format!("./mount/uploads-compressed/{}.JPG", path)
         ) {
             Ok(e) => e,
             Err(_) => return payload_respond(4014),
@@ -275,6 +284,28 @@ pub async fn get_collection(req: HttpRequest, appdata: web::Data<Mutex<AppData>>
     HttpResponse::Ok().json(
         &coll.get(path)
     )
+}
+
+/* DEBUG */
+#[get("/debug")]
+pub async fn debug() -> impl Responder {
+    HttpResponse::Ok().body(format!(
+        "mount: {} \n\n comp: {} \n\n noncomp: {} \n\n",
+        list_files_and_folders("./mount".into()),
+        list_files_and_folders("./mount/uploads-compressed".into()),
+        list_files_and_folders("./mount/uploads".into())
+    ))
+}
+
+fn list_files_and_folders(path: String) -> String {
+    let mut items = Vec::new();
+    for entry in std::fs::read_dir(path).unwrap() {
+        let entry = entry.unwrap();
+        let file_name = entry.file_name().to_str().unwrap_or("").to_string();
+        items.push(file_name.to_string());
+    }
+
+    items.join(", ")
 }
 
 /* Utils */
