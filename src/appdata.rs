@@ -6,7 +6,7 @@ use bincode;
 use serde_derive::{ Deserialize, Serialize };
 
 /* Constants */
-const PATH_TO_APPDATA_SAVE:&'static str = "./appdata";
+const PATH_TO_APPDATA_SAVE:&'static str = "./mount/appdata";
 
 /* Global app data */
 #[derive(Deserialize, Serialize, Debug)]
