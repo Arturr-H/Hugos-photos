@@ -10,6 +10,7 @@ import {
     useParams
 } from "react-router-dom";
 import ScrollContainer from "react-indiana-drag-scroll"
+import { Scroller } from "./Scroller";
 
 /* Main */
 class App extends React.PureComponent {
@@ -18,36 +19,19 @@ class App extends React.PureComponent {
 
 		/* Changeable */
 		this.state = {
-			scrollPercentage: 0.0,
-			scrollPercentageNoRoof: 0.0,
-			showImage: {
-				active: false,
-				info: {
-					src: "",
-					ort: "",
-					datum: "",
-					kamera: "",
-					src_no_compress: ""
-				}
-			},
-			isMobile: false,
-
-			/* To know where the chevron down arrow should scroll to */
-			section: 0,
+			imageModal: {},
+			section: 1
 		};
 
 		/* Refs */
-		this.main = React.createRef();
-		this.imageShow = React.createRef();
-		this.scrollToSection = React.createRef();
-		this.collectionsSection = React.createRef();
+		this.s1 = React.createRef();
+		this.s2 = React.createRef();
+		this.s3 = React.createRef();
 
+		/* Bindings */
+		this.scroll = this.scroll.bind(this);
 
-		this.window = ["", "", "", "", "", "", ""];
-		this.isChrome = navigator.userAgent.indexOf("Chrome") !== -1;
-		this.location = this.props.router.params.location;
-
-		/* Static */
+		/* Scroller images */
 		this.images = [
 			{
 				src: require("./assets/images/compressed/Lingonberries.JPG"),
@@ -83,52 +67,16 @@ class App extends React.PureComponent {
 				src: require("./assets/images/compressed/Toadstool.JPG"),
 				src_no_compress: require("./assets/images/default/Toadstool.JPG"),
 				datum: "Unknown",
-			 }
+			}
 		];
 	}
 
-	componentDidMount() {
-		if (this.location === "collections") {
-			this.collectionsSection.current.scrollIntoView({ behavior: "smooth" });
-		}
-		
-		this.main !== null && this.main.current.addEventListener("scroll", (e) => {
-			let a = e.target.scrollTop / window.innerHeight;
-			this.setState({
-				scrollPercentage: Math.min(a, 1),
-				scrollPercentageNoRoof: a,
-				section: Math.floor(a)
-			});
-
-		})
-
-		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-			this.setState({ isMobile: true });
-		}
-
-		/* Remove active if click item not have className="TARGETABLE" */
-		document.addEventListener("click", (e) => {
-			if (e.target.className.indexOf("TARGETABLE") === -1) {
-				this.closeShowImage();
-			}
-		});
-
-		/* Secret code for opening secret tab */
-		document.addEventListener("keydown", (e) => {
-
-			/* Add key to array */
-			this.window.shift();
-			this.window.push(e.key);
-
-			/* Check if array is correct */
-			if (this.window.join("") === "hugo123") {
-				window.open("/post", "_blank");
-				this.window = [];
-			}
-		});
-	}
+	/* Component Lifetime */
+	componentDidMount() {}
 	componentWillUnmount() {}
-	closeShowImage = () => {
+
+	// TODO: Check status
+	closeImageModal = () => {
 		this.imageShow.current && this.imageShow.current.animate([
 			{ opacity: 1 },
 			{ opacity: 0 }
@@ -139,7 +87,7 @@ class App extends React.PureComponent {
 
 		setTimeout(() => {
 			this.setState({
-				showImage: {
+				imageModal: {
 					active: false,
 					info: { src: "", ort: "", datum: "", kamera: "" }
 				}
@@ -148,11 +96,13 @@ class App extends React.PureComponent {
 	};
 
 	/* On image click */
+	// TODO: Check status
 	triggerImageSelect = (index) => {
+		console.log("img", index);
 		let imgData = this.images[index];
 
 		this.setState({
-			showImage: {
+			imageModal: {
 				active: true,
 				info: {
 					src: imgData.src,
@@ -164,106 +114,76 @@ class App extends React.PureComponent {
 			}
 		})
 	}
-	scrollDown = () => {
-		if (this.state.section === 0) {
-			document.getElementById("image-gallery").scrollIntoView({ behavior: "smooth" });
-		}else {
-			document.getElementById("collections-ref-container").scrollIntoView({ behavior: "smooth" });
-		}
+
+	/* Use of scroll-button */
+	scroll() {
+		let num = this.state.section + 1;
+		let map = {
+			1: this.s1,
+			2: this.s2,
+			3: this.s3,
+		};
+
+		/* Scroll to section */
+		map[num].current.scrollIntoView({ behavior: "smooth" });
+
+		/* Set num */
+		this.setState({ section: num >= 3 ? 0 : num });
 	}
 
+	/* Render */
 	render() {
 		return (
 			<div className="background">
 				<Navbar aboutMeVisible={this.state.scrollPercentage < 1}  />
-				
-				<h1 style={{
-					transform: "translateX(-50%) translateY(" +  ((-50) - this.state.scrollPercentage*-100) + "%)",
-					top: (50 - this.state.scrollPercentage*50) + "%",
-					fontSize: Math.max(19.5 - (this.state.scrollPercentage * 32), 7) + "vmin",
-					letterSpacing: this.state.scrollPercentage * 10
-				}} className="title">
-					{(this.state.scrollPercentageNoRoof > 1.5 && this.state.isMobile) ? "" : "Hugo Sjögren"}
-					{this.state.scrollPercentageNoRoof > 1.5 ? <span style={{
-						width: ((this.state.scrollPercentageNoRoof - 1.5) * 105) + "vmin",
-						display: "inline-block",
-						overflow: "hidden",
-						whiteSpace: "nowrap",
-						height: 6.5 + "vmin",
-						transform: "translateY(0.2vmin)",
-						textAlign: "right"
-					}}>/&nbsp;&nbsp;Collections</span> : null}
-				</h1>
 
-				<main ref={this.main} className={this.isChrome ? "" : "scrollsnap"}>
+				{/* ALL SECTIONS ARE HERE */}
+				<main>
+					{/* Background image */}
+					<ScaledImage
+						blur={10}
+						brightness={100}
+						className={"fixed"}
+						source={require("./assets/images/compressed/SnowHouse.JPG")}
+					/>
 
-					{/* Only show if not completly dark */}
-					{
-						this.state.scrollPercentage < 1 ?
-							<ScaledImage
-								blur={this.state.scrollPercentage * 10}
-								brightness={110 - this.state.scrollPercentage * 100}
-								className={"fixed"}
-								source={require("./assets/images/default/SnowHouse.JPG")}
-							/> : <ScaledImage
-								blur={10}
-								brightness={10}
-								className={"fixed"}
-								source={require("./assets/images/compressed/SnowHouse.JPG")}
-							/>
-					}
+					{/* The <ScaledImage /> is position: flex therefore we need an
+						extra section to compensate / add height to the page */}
+					<section className="center-container" ref={this.s1}>
+						{/* Title / header */}
+						<h1 className="title">Hugo Sjögren</h1>
+					</section>
 
-					{/* Scrolling section hidden behind fixed image (never shown) */}
-					<section></section>
-
-					{/* Play intro animation upon visibility */}
-					{
-						this.isChrome
-						? <MainView
-							id="image-gallery"
-							triggerImageSelect={this.triggerImageSelect}
-							images={this.images}
-							showImageActive={this.state.showImage.active}
-						/>
-						: (this.state.scrollPercentage >= 1 ?
-							<MainView
-								id="image-gallery"
-								triggerImageSelect={this.triggerImageSelect}
+					{/* Image scrolling (hugos fav images) */}
+					<section ref={this.s2} className="animated" id={this.props.id}>
+						<div className="images-container">
+							<Scroller
 								images={this.images}
-								showImageActive={this.state.showImage.active}
+								onImageClick={(index) => this.triggerImageSelect(index)}
 							/>
-							: <section id="image-gallery" ref={this.scrollToSection}></section>)
-					}
+						</div>
+					</section>
 
 					{/* Collections section */}
-					<div className="collections-ref-container" id="collections-ref-container" ref={this.collectionsSection}>
+					<div ref={this.s3} className="collections-ref-container" id="collections-ref-container">
 						<Collections scroll={this.state.scrollPercentage} />
 					</div>
 				</main>
 
-				{/* Chevron down */}
-				{this.state.scrollPercentageNoRoof < 1.5 ? <Icon
-					onClick={this.scrollDown}
-					className="chevron-down"
-					icon={this.state.scrollPercentage < 1 ? "chevron-down" : "chevron-down-white"}
-					size={80}
-				/> : null}
-
 				{/* On image click */}
-				{ this.state.showImage.active ? <div className="image-show-background" ref={this.imageShow}>
+				{ this.state.imageModal.active ? <div className="image-show-background" ref={this.imageShow}>
 					<div className="TARGETABLE container">
-						<Icon className="close" size={24} icon="x" onClick={this.closeShowImage} />
-						<img alt="backg" src={this.state.showImage.info.src_no_compress} className="TARGETABLE image-show" />
+						<Icon className="close" size={24} icon="x" onClick={this.closeimageModal} />
+						<img alt="backg" src={this.state.imageModal.info.src_no_compress} className="TARGETABLE image-show" />
 
 						{/* Needed for margin */}
 						<div className="TARGETABLE info"></div>
 
 						{/* Download */}
 						<a
-                            href={this.state.showImage.info.src}
+                            href={this.state.imageModal.info.src_no_compress}
                             className="TARGETABLE download"
                             download
-                            onClick={e => this.download(e)}
                         >
                             <p className="TARGETABLE">Download</p>
                             <Icon className="TARGETABLE" size={24} icon="download" />
@@ -271,109 +191,23 @@ class App extends React.PureComponent {
 					</div>
 					<img alt="blur" src={this.images[0]} className="TARGETABLE image-show-blur" />
 				</div> : null }
+
+				{/* This is the button that will help users scroll
+					BECAUSE FOR SOME FKN REASON CHROME DECIDES TO 
+					BAIL OUT ON GREAT SCROLL FEATURES PLEASEE WHY */}
+				<button onClick={this.scroll} className="scroll-button">
+					<Icon
+						className="chevron-down"
+						icon={"chevron-down-white"}
+						size={48}
+					/>
+				</button>
 			</div>
 		);
 	}
 }
 
-/* Main image view */
-class MainView extends React.PureComponent {
-	constructor(props) {
-		super(props);
-
-		/* Changeable */
-		this.state = {
-			isResizing: false,
-			autoScroll: true,
-			galleryScrollPercentage: 0
-		};
-
-		/* Refs */
-		this.gallery = React.createRef();
-	}
-
-	render() {
-		return (
-			<section className="animated" id={this.props.id}>
-				<ScrollContainer
-					horizontal={true}
-					ref={this.gallery}
-					className="gallery-container"
-				>
-					
-					{/* <Images /> */}
-					<Images images={this.props.images} triggerImageSelect={this.props.triggerImageSelect} />
-					<Images images={this.props.images} triggerImageSelect={this.props.triggerImageSelect} />
-				</ScrollContainer>
-			</section>
-		);
-	}
-}
-
-/* Images in the main image view */
-class Images extends React.PureComponent {
-	constructor(props) {
-		super(props);
-
-		/* Changeable */
-		this.state = {
-		};
-
-		/* Static */
-	}
-
-	componentDidMount() { }
-	componentWillUnmount() { }
-
-	render() {
-		return (
-			<div className="images-container">
-				{
-					this.props.images.map((data, index) => 
-						<Image
-							alt={"hugos pic " + (index + 1)}
-							className={"s s" + (index + 1)}
-							src={data.src}
-							key={index}
-							index={index}
-							triggerImageSelect={this.props.triggerImageSelect}
-						/>
-					)
-				}
-			</div>
-		);
-	}
-}
-
-/* Image in the Images view */
-class Image extends React.PureComponent {
-	constructor(props) {
-		super(props);
-
-		/* Changeable */
-		this.state = {
-		};
-
-		/* Static */
-	}
-
-	componentDidMount() { }
-	componentWillUnmount() { }
-
-	render() {
-		return (
-			<div className={this.props.className + " TARGETABLE"}>
-				<img
-					src={this.props.src}
-					alt={this.props.alt}
-					className={"TARGETABLE"}
-					onClick={() => this.props.triggerImageSelect(this.props.index)}
-				/>
-			</div>
-		);
-	}
-}
-
+/* Export with nav features */
 function withRouter(Component) {
     function ComponentWithRouterProp(props) {
         let location = useLocation();
