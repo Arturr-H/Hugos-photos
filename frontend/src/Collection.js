@@ -39,12 +39,17 @@ class Collection extends React.PureComponent {
                     datum: "",
                     kamera: ""
                 }
-            }
+            },
+
+            moderatorMode: false,
         }
 
         /* Static */
         this.backendURL = Globals.backendUrl;
         this.id = this.props.router.params.id;
+
+        /* The secret code to unlock moderator mode (requires auth tho) */
+		this.insertedKeys = [];
 
         this.imageShow = React.createRef();
     }
@@ -57,6 +62,22 @@ class Collection extends React.PureComponent {
             }
         });
 
+        /* Secret moderation enable */
+        document.addEventListener("keydown", (e) => {
+			/* We only want 8 chars in the array */
+			if (this.insertedKeys.length >= 8)
+				this.insertedKeys.shift();
+
+			this.insertedKeys.push(e.key);
+
+			/* If the code is right */
+			if (this.insertedKeys.join("") === "hugoedit") {
+                alert("Moderator mode enabled")
+				this.setState({ moderatorMode: true });
+			}
+		});
+
+        /* Get images */
         fetch(this.backendURL + "get-collection/" + this.id).then(async res => res.json()).then(data => {
             if (data == null) {
                 alert("Collection not found");
@@ -79,7 +100,6 @@ class Collection extends React.PureComponent {
 
         return result;
     };
-
     showImage = (src, ort, datum, kamera) => {
         this.setState({
             showImage: {
@@ -128,6 +148,47 @@ class Collection extends React.PureComponent {
                 console.log(err);
             });
     };
+    getCookie = (cname) => {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    /* Delete image from collection */
+    deleteImage = (e, pathname) => {
+        e.stopPropagation();
+
+        fetch(this.backendURL + `delete-image/${pathname}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "token": this.getCookie("_token")
+            }
+        })
+            .then(response => {
+                response.json().then(data => {
+                    if (data.status === 200) {
+                        alert("Image deleted");
+                    } else {
+                        alert("Image not deleted");
+                    }
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
 
     render() {
         return (
@@ -140,16 +201,32 @@ class Collection extends React.PureComponent {
                 <div className="images TARGETABLE">
                     {
                         this.state.collection.images && this.state.collection.images
-                            .map(value => ({ value, sort: Math.random() }))
-                            .sort((a, b) => a.sort - b.sort)
+                            .map((value, index) => ({ value, sort: Math.random() }))
+                            .sort(
+                                this.state.moderatorMode
+                                    ? (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+                                    : (a, b) => a.sort - b.sort
+                                )
                             .map(({ value }) => value)
                             .map((image, index) => {
                                 let src = this.backendURL + "uploads-compressed/" + image.pathname;
                                 let src_not_compressed = this.backendURL + "uploads/" + image.pathname;
                                 return (
                                     <div key={index} className="image TARGETABLE" onClick={() => this.showImage(src_not_compressed, "Icke definerat", image.date, "Nikon")}>
+                                        {/* Delete this image button */}
+                                        <button onClick={(e) => this.deleteImage(e, image.pathname)} style={{
+                                            top: "1vmax",
+                                            right: "1vmax",
+                                            display: this.state.moderatorMode === true ? "block" : "none"
+                                        }} className="collection-delete-button TARGETABLE"></button>
+
+                                        {/* The actual image */}
                                         <img className="TARGETABLE" key={index} src={src} alt="Cover" />
+
+                                        {/* Gradient for hovering */}
                                         <div className="gradient TARGETABLE"></div>
+
+                                        {/* Date and title */}
                                         <p className="title TARGETABLE">{this.convertToRealContent(image.title)}</p>
                                         <p className="date TARGETABLE">{image.date}</p>
                                     </div>
@@ -169,16 +246,6 @@ class Collection extends React.PureComponent {
                                 <p className="TARGETABLE">Datum: </p>
                                 <p className="TARGETABLE">{this.state.showImage.info.datum}</p>
                             </div>
-                            {/* <div className="TARGETABLE bit">
-                                <Icon size={24} icon="map-pin" />
-                                <p className="TARGETABLE">Ort: </p>
-                                <p className="TARGETABLE">{this.state.showImage.info.ort}</p>
-                            </div>
-                            <div className="TARGETABLE bit">
-                                <Icon size={24} icon="camera" />
-                                <p className="TARGETABLE">Kamera: </p>
-                                <p className="TARGETABLE">{this.state.showImage.info.kamera}</p>
-                            </div> */}
                         </div>
                         <a
                             href={this.state.showImage.info.src}
@@ -190,7 +257,6 @@ class Collection extends React.PureComponent {
                             <Icon className="TARGETABLE" size={24} icon="download" />
                         </a>
                     </div>
-                    {/* <img alt="blur" src={this.images[0]} className="TARGETABLE image-show-blur" /> */}
                 </div> : null}
             </section>
         )
