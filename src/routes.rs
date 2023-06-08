@@ -221,19 +221,94 @@ pub async fn collections(appdata: web::Data<Mutex<AppData>>) -> impl Responder {
 pub async fn delete_collection(req: HttpRequest, appdata: web::Data<Mutex<AppData>>) -> impl Responder {
     let col = req.match_info().get("collection").unwrap_or("");
 
+    /* Check token */
+    if let Some(token) = req.headers().get("token") {
+        if token != &**SECRET {
+            return payload_respond(4083)
+        }
+    }else {
+        return payload_respond(4082)
+    }
+
+    /* Remove from appdata */
     match match appdata.lock() {
         LockResult::Ok(e) => e,
         LockResult::Err(_) => return payload_respond(4019)
     }.collections.remove(col) {
-        Some(_) => HttpResponse::Ok().json(json!({
-            "status": 200,
-            "message": "Deleted collections",
-        })),
+        Some(e) => {
+            /* Delete all images from folders uploads and uploads-compressed */
+            for image in e.images {
+                std::fs::remove_file(format!("./mount/uploads/{}.JPG", image.pathname)).ok();
+                std::fs::remove_file(format!("./mount/uploads-compressed/{}.JPG", image.pathname)).ok();
+            };
+
+            /* Delete cover image */
+            let cover_img = e.cover_image.pathname;
+            std::fs::remove_file(format!("./mount/uploads/{}.JPG", cover_img)).ok();
+            std::fs::remove_file(format!("./mount/uploads-compressed/{}.JPG", cover_img)).ok();
+
+            /* Respond */
+            HttpResponse::Ok().json(json!({
+                "status": 200,
+                "message": "Deleted collections",
+            }))
+        },
         None => HttpResponse::Ok().json(json!({
             "status": 404,
             "message": "No collection found",
         }))
     }
+}
+
+/* Remove an image from collection (requires AUTH) */
+pub async fn delete_image(req: HttpRequest, appdata: web::Data<Mutex<AppData>>) -> impl Responder {
+    let pathname = req.match_info().get("pathname").unwrap_or("");
+
+    /* Check token */
+    if let Some(token) = req.headers().get("token") {
+        if token != &**SECRET {
+            return payload_respond(4083)
+        }
+    }else {
+        return payload_respond(4082)
+    }
+
+    let mut collection_id: String = String::new();
+
+    /* Remove from appdata */
+    'outer: for collection in &match appdata.lock() {
+        LockResult::Ok(e) => e,
+        LockResult::Err(_) => return payload_respond(4019)
+    }.collections {
+        for image in &collection.1.images {
+            if image.pathname == pathname {
+                collection_id = collection.0.clone();
+                std::fs::remove_file(format!("./mount/uploads/{}.JPG", pathname)).ok();
+                std::fs::remove_file(format!("./mount/uploads-compressed/{}.JPG", pathname)).ok();
+
+                break 'outer;
+            }
+        };
+    };
+
+    /* Remove from appdata */
+    match match appdata.lock() {
+        LockResult::Ok(e) => e,
+        LockResult::Err(_) => return payload_respond(4019)
+    }.collections.get_mut(&collection_id) {
+        Some(e) => {
+            /* Remove */
+            e.images.retain(|image| image.pathname != pathname);
+            
+        },
+        None => return payload_respond(4015)
+    };
+
+    /* Respond */
+    HttpResponse::Ok().json(json!({
+        "status": 200,
+        "message": "Deleted image",
+    }))
 }
 
 /* *CLEAR* all documents TODO: Delete this route later */
