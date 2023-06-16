@@ -8,7 +8,7 @@ export default class ScaledImage extends React.PureComponent {
             <img
                 src={this.props.source}
                 className={"scaled-image " + this.props.className}
-                alt="showed upon clicking an image"
+                alt="showed upon clicking"
                 style={{
                     filter: "blur(" + this.props.blur + "px) brightness(" + this.props.brightness + "%)",
                 }}
