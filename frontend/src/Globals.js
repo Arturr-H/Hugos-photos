@@ -1,3 +1,3 @@
 export default {
-    backendUrl: "http://127.0.0.1:8082/"
+    backendUrl: "https://hugos-photos-backend.fly.dev/"
 }
