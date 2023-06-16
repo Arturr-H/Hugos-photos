@@ -37,7 +37,7 @@ export default class About extends React.PureComponent {
                     <br /><br />
                     For business inquires, please reach out to <a href="mailto: hugosjogren06@gmail.com">hugosjogren06@gmail.com</a>
                 </p>
-                <img className="image" src={require("./assets/images/profile.JPG")} />
+                <img alt="Picture of Hugo Sjögren" className="image" src={require("./assets/images/profile.JPG")} />
             </div>
         )
     }
