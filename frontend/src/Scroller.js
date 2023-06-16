@@ -15,12 +15,10 @@ export class Scroller extends React.PureComponent {
 
         /* Refs */
         this.track = React.createRef();
+        this.cursor = React.createRef();
 
         /* Bindings */
         this.fullscreen = this.fullscreen.bind(this);
-        this.handleOnDown = this.handleOnDown.bind(this);
-        this.handleOnMove = this.handleOnMove.bind(this);
-        this.handleOnUp = this.handleOnUp.bind(this);
 
         this.down = false;
     }
@@ -28,61 +26,22 @@ export class Scroller extends React.PureComponent {
     /* Lifetime */
     componentDidMount() {
         this.setState({ isMounted: true });
-        window.onmousedown = e => this.handleOnDown(e);
-		window.ontouchstart = e => this.handleOnDown(e.touches[0]);
-		window.onmouseup = e => this.handleOnUp(e);
-		window.ontouchend = e => this.handleOnUp(e.touches[0]);
-		window.onmousemove = e => this.handleOnMove(e);
-		window.ontouchmove = e => this.handleOnMove(e.touches[0]);
+        const opt = { duration: 30000, fill: "forwards", easing: "linear", iterations: 88 };
+        this.track.current.animate([
+            { transform: `translate(${-80}%, -50%)` },
+            { transform: `translate(${-20}%, -50%)` },
+            { transform: `translate(${-80}%, -50%)` },
+        ], opt);
+        for (const image of this.track.current.getElementsByClassName("image")) {
+            image.animate([
+                { objectPosition: `${0}% center` },
+                { objectPosition: `${100}% center` },
+                { objectPosition: `${0}% center` },
+            ], opt);
+        }
     }
     componentWillUnmount() {
         this.setState({ isMounted: false });
-        /* Clear evts */
-        window.onmousedown = e => null;
-		window.ontouchstart = e => null;
-		window.onmouseup = e => null;
-		window.ontouchend = e => null;
-		window.onmousemove = e => null;
-		window.ontouchmove = e => null;
-    }
-
-    /* Movin image track */
-    handleOnMove = e => {
-        if (!this.state.isMounted || !this.down) return;
-
-        const MOUSE_DELTA = (parseFloat(this.track.current.dataset.mouseDownAt) - e.clientX) / 7;
-        const MAX_DELTA = window.innerWidth / 2;
-
-        const PERCENTAGE = (MOUSE_DELTA / MAX_DELTA) * -100;
-        const NEXT_PERCENTAGE_UNCONSTRAINED = parseFloat(this.track.current.dataset.prevPercentage) + PERCENTAGE;
-        const NEXT_PERCENTAGE = Math.max(Math.min(NEXT_PERCENTAGE_UNCONSTRAINED, 0), -100);
-
-        /* I hate javascript */
-        if (NEXT_PERCENTAGE == NaN || NEXT_PERCENTAGE == "NaN" || !NEXT_PERCENTAGE) return;
-
-        this.track.current.dataset.percentage = NEXT_PERCENTAGE;
-        this.track.current.animate({
-            transform: `translate(${NEXT_PERCENTAGE}%, -50%)`
-        }, { duration: 1200, fill: "forwards" });
-
-        this.setState({ percentage: NEXT_PERCENTAGE + 100 });
-
-        for (const image of this.track.current.getElementsByClassName("image")) {
-            image.animate({
-                objectPosition: `${100 + NEXT_PERCENTAGE}% center`
-            }, { duration: 1200, fill: "forwards" });
-        }
-    }
-    handleOnDown = e => {
-        if (!this.state.isMounted) return;
-        this.down = true;
-        this.track.current.dataset.mouseDownAt = e.clientX
-    };
-    handleOnUp = () => {
-        this.down = false;
-        if (!this.state.isMounted || !this.track.current.dataset.percentage) return;
-        this.track.current.dataset.mouseDownAt = "0";
-        this.track.current.dataset.prevPercentage = this.track.current.dataset.percentage;
     }
 
     /* Fullscreen toggle */
@@ -147,6 +106,7 @@ class Image extends React.PureComponent {
                     draggable={false}
                     className="image"
                     src={this.props.data.src}
+                    alt={this.props.id + "image uploaded bu hugo"}
                 />
             </div>
 		);
