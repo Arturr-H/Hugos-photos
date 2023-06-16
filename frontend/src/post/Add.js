@@ -43,7 +43,6 @@ export default class Add extends React.PureComponent {
         fetch(BACKEND_URL + "collections").then(async res => res.json()).then(data => {
             let coll = data.collections;
             this.setState({ collections: coll });
-            console.log("OOOO", Object.keys(coll)[0]);
             this.setState({ postToCollectionHash: Object.keys(coll)[0]  })
         });
     }
@@ -182,7 +181,7 @@ export default class Add extends React.PureComponent {
                     bilder samtidigt. Men välj helst max 10 bilder åt gången, och för att få bilderna att se
                     bäst ut, använd JPG:s istället för PNG:s (bilderna du tar med din kamera är automatiskt JPG 👍).
                     Om du exempelvis vill lägga upp screenshots från din dator, skulle jag rekommendera att du 
-                    använder en sida som ex <a target="_blank" href="https://png2jpg.com/">https://png2jpg.com/</a> för att
+                    använder en sida som ex <a rel="noreferrer" target="_blank" href="https://png2jpg.com/">https://png2jpg.com/</a> för att
                     göra om dem till JPG:s, då screenshots oftast sparas som PNG:s. Om du har frågor är det såklart
                     bara att ställa dem!
                 </p>

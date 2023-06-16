@@ -131,7 +131,7 @@ export default class Create extends React.PureComponent {
                     Datum-inputted får inte innehålla emojies / extrasymboler. Bara siffror bokstäver punkt, komma, bindestreck osv.
                     Använd helst JPG:s istället för PNG:s (bilderna du tar med din kamera är automatiskt JPG 👍).
                     Om du exempelvis vill lägga upp screenshots från din dator, skulle jag rekommendera att du 
-                    använder en sida som ex <a target="_blank" href="https://png2jpg.com/">https://png2jpg.com/</a> för att
+                    använder en sida som ex <a rel="noreferrer" target="_blank" href="https://png2jpg.com/">https://png2jpg.com/</a> för att
                     göra om dem till JPG:s, då screenshots oftast sparas som PNG:s. Om du har frågor är det såklart
                     bara att ställa dem!
                 </p>
