@@ -9,7 +9,6 @@ import {
     useNavigate,
     useParams
 } from "react-router-dom";
-import ScrollContainer from "react-indiana-drag-scroll"
 import { Scroller } from "./Scroller";
 
 /* Main */
