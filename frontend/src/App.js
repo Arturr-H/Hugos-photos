@@ -20,32 +20,45 @@ class App extends React.PureComponent {
 		/* Changeable */
 		this.state = {
 			imageModal: {},
-			section: 1
+			section: 1,
+
+			/// Wether the user can delete collections and more
+			moderatorMode: false
 		};
 
 		/* Refs */
 		this.s1 = React.createRef();
 		this.s2 = React.createRef();
 		this.s3 = React.createRef();
+		this.imageModal = React.createRef();
 
 		/* Bindings */
 		this.scroll = this.scroll.bind(this);
+		this.enableModeration = this.enableModeration.bind(this);
+
+		/* The secret code to unlock moderator mode (requires auth tho) */
+		this.insertedKeys = [];
 
 		/* Scroller images */
 		this.images = [
+			{
+				src: require("./assets/images/compressed/Hayfield.JPG"),
+				src_no_compress: require("./assets/images/default/Hayfield.JPG"),
+				datum: "Unknown",
+			},
 			{
 				src: require("./assets/images/compressed/Lingonberries.JPG"),
 				src_no_compress: require("./assets/images/default/Lingonberries.JPG"),
 				datum: "Unknown",
 			},
 			{
-				src: require("./assets/images/compressed/ForestWoman.JPG"),
-				src_no_compress: require("./assets/images/default/ForestWoman.JPG"),
+				src: require("./assets/images/compressed/Toadstool.JPG"),
+				src_no_compress: require("./assets/images/default/Toadstool.JPG"),
 				datum: "Unknown",
 			},
 			{
-				src: require("./assets/images/compressed/Hayfield.JPG"),
-				src_no_compress: require("./assets/images/default/Hayfield.JPG"),
+				src: require("./assets/images/compressed/ForestWoman.JPG"),
+				src_no_compress: require("./assets/images/default/ForestWoman.JPG"),
 				datum: "Unknown",
 			},
 			{
@@ -63,21 +76,36 @@ class App extends React.PureComponent {
 				src_no_compress: require("./assets/images/default/SkyOceanRain.JPG"),
 				datum: "Unknown",
 			},
-			{
-				src: require("./assets/images/compressed/Toadstool.JPG"),
-				src_no_compress: require("./assets/images/default/Toadstool.JPG"),
-				datum: "Unknown",
-			}
 		];
 	}
 
 	/* Component Lifetime */
-	componentDidMount() {}
+	componentDidMount() {
+		document.addEventListener("keydown", (e) => {
+			/* We only want 8 chars in the array */
+			if (this.insertedKeys.length >= 8)
+				this.insertedKeys.shift();
+
+			this.insertedKeys.push(e.key);
+
+			/* If the code is right */
+			if (this.insertedKeys.join("") === "hugoedit") {
+				this.enableModeration();
+			}
+		});
+	}
 	componentWillUnmount() {}
 
+	/* Enable moderation tools */
+	enableModeration() {
+		this.setState({ moderatorMode: true }, () => {
+			alert("Moderation tools enabled 🤓");
+		});
+	}
+	
 	// TODO: Check status
 	closeImageModal = () => {
-		this.imageShow.current && this.imageShow.current.animate([
+		this.imageModal.current && this.imageModal.current.animate([
 			{ opacity: 1 },
 			{ opacity: 0 }
 		], {
@@ -98,7 +126,6 @@ class App extends React.PureComponent {
 	/* On image click */
 	// TODO: Check status
 	triggerImageSelect = (index) => {
-		console.log("img", index);
 		let imgData = this.images[index];
 
 		this.setState({
@@ -150,8 +177,11 @@ class App extends React.PureComponent {
 					{/* The <ScaledImage /> is position: flex therefore we need an
 						extra section to compensate / add height to the page */}
 					<section className="center-container" ref={this.s1}>
-						{/* Title / header */}
-						<h1 className="title">Hugo Sjögren</h1>
+						<div className="header-box">
+							<div className="title-bg"></div>
+							{/* Title / header */}
+							<h1 className="title">Hugo Sjögren</h1>
+						</div>
 					</section>
 
 					{/* Image scrolling (hugos fav images) */}
@@ -166,14 +196,14 @@ class App extends React.PureComponent {
 
 					{/* Collections section */}
 					<div ref={this.s3} className="collections-ref-container" id="collections-ref-container">
-						<Collections scroll={this.state.scrollPercentage} />
+						<Collections moderatorMode={this.state.moderatorMode} />
 					</div>
 				</main>
 
 				{/* On image click */}
-				{ this.state.imageModal.active ? <div className="image-show-background" ref={this.imageShow}>
+				{ this.state.imageModal.active ? <div className="image-show-background" ref={this.imageModal}>
 					<div className="TARGETABLE container">
-						<Icon className="close" size={24} icon="x" onClick={this.closeimageModal} />
+						<Icon className="close" size={24} icon="x" onClick={this.closeImageModal} />
 						<img alt="backg" src={this.state.imageModal.info.src_no_compress} className="TARGETABLE image-show" />
 
 						{/* Needed for margin */}
@@ -196,11 +226,17 @@ class App extends React.PureComponent {
 					BECAUSE FOR SOME FKN REASON CHROME DECIDES TO 
 					BAIL OUT ON GREAT SCROLL FEATURES PLEASEE WHY */}
 				<button onClick={this.scroll} className="scroll-button">
-					<Icon
-						className="chevron-down"
-						icon={"chevron-down-white"}
-						size={48}
-					/>
+
+					{/* We need this container to rotate the arrow
+						because the other items already use the
+						transform field, and we don't want to mess that up. */}
+					<div style={this.state.section === 0 ? { transform: "rotate(180deg)" } : {}}>
+						<Icon
+							className="chevron-down"
+							icon={"chevron-down-white"}
+							size={48}
+						/>
+					</div>
 				</button>
 			</div>
 		);
