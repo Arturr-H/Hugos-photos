@@ -6,7 +6,6 @@ import {
     useParams
 } from "react-router-dom";
 import Icon from "./Icon";
-import { HashLink } from "react-router-hash-link";
 import Globals from "./Globals";
 
 function withRouter(Component) {
@@ -72,7 +71,7 @@ class Collection extends React.PureComponent {
 
 			/* If the code is right */
 			if (this.insertedKeys.join("") === "hugoedit") {
-                alert("Moderator mode enabled")
+                alert("Moderator mode enabled 🤓. Asså du är fet discord moderator asså man kolla på dina mobil notiser dom ba bling bling new kitten joined the chat 😂😂😂 liksom varför ha kitten när man kan typ ha riktiga tjejer eller ännu bättre - anime tjejer omg ja måste fan ha en sån nån gång fan va najs de skulle va å ha en tecknad person med sig 😂 (rösterna blir högre) varför skrev jag det här ")
 				this.setState({ moderatorMode: true });
 			}
 		});
