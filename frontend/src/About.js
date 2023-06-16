@@ -2,14 +2,6 @@ import React from "react";
 import Icon from "./Icon";
 
 export default class About extends React.PureComponent {
-    constructor(props) {
-        super(props);
-
-        /* Props */
-    }
-
-    componentDidMount() {}
-
     render() {
         return (
             <div className="about-container">
