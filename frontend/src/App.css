@@ -98,30 +98,13 @@ nav {
 }
 
 /* Title */
-.header-box {
-	position: absolute;
+h1.title {
 	left: 50%;
 	top: 50%;
+	transform: translateX(-50%) translateY(-50%);
 
-	transform: translate(-50%, -60%);
-	/* background: #000; */
-
-	animation: header-box-return 2s ease forwards;
-	animation-delay: 1.5s;
-}.header-box > .title-bg {
-	width: 100%;
-	height: 100%;
-
-	background: white;
 	position: absolute;
-
-	transform: scaleX(0);
-	transform-origin: left center;
-
-	animation: title-bg 2.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-	animation-delay: 1.2s;
-}.header-box > h1.title {
-	font-size: 18vmin;
+	font-size: 10rem;
 	z-index: 5;
 	font-family: "Bebas Neue", cursive;
 
@@ -135,24 +118,6 @@ nav {
 	color: #fff;
     mix-blend-mode: exclusion;
 	filter: brightness(200%);
-	white-space: nowrap;
-
-	padding-top: 0.3vmax;
-	padding-right: 8vmax;
-
-	animation: title-scaledown ease-in-out 1s forwards;
-	animation-delay: 1s;
-}h1.title.upward {
-	left: 0;
-	top: 0;
-	width: max-content;
-	transform: none;
-	position: relative;
-	font-size: 15vmin;
-
-	color: #fff;
-	mix-blend-mode: normal;
-	filter: none;
 }p.biography {
 	position: relative;
 	font-size: 3.4vmin;
@@ -226,15 +191,15 @@ nav {
     display: none;  /* Safari and Chrome */
 }.gallery-container > .images-container {
 	height: 100%;
-	min-width: max(150vw, 100rem);
+	min-width: max(190vw, 120rem);
 
 	display: grid;
 	grid-template-areas:
-		"s1 s1 s2 s2 s3 s4 s4 s7"
-		"s1 s1 s5 s5 s5 s5 s6 s7";
+		"s1 s1 s2 s2 s3 s4 s4 s7 s9 s10 s10 s10"
+		"s1 s1 s5 s5 s5 s6 s6 s7 s8 s8 s11 s11";
 	gap: 0.5rem;
 
-	/* animation: scroll-by 50s ease-in-out infinite; */
+	animation: scroll-by 40s ease-in-out infinite;
 }
 @keyframes scroll-by {
 	0% { transform: translateX(-100%); }
@@ -250,6 +215,10 @@ nav {
 .gallery-container > .images-container > .s5 { grid-area: s5; }
 .gallery-container > .images-container > .s6 { grid-area: s6; }
 .gallery-container > .images-container > .s7 { grid-area: s7; }
+.gallery-container > .images-container > .s8 { grid-area: s8; }
+.gallery-container > .images-container > .s9 { grid-area: s9; }
+.gallery-container > .images-container > .s10 { grid-area: s10; }
+.gallery-container > .images-container > .s11 { grid-area: s11; }
 .gallery-container > .images-container > .s {
 	width: auto;
 	height: auto;
@@ -393,7 +362,7 @@ a.download {
 
 	position: relative;
 	box-sizing: border-box;
-	padding-top: 7rem;
+	/* padding-top: 7rem; */
 
 }.collection-section > .collections > .peg-board {
 	position: absolute;
