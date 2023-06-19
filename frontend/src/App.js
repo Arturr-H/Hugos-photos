@@ -10,6 +10,7 @@ import {
     useParams
 } from "react-router-dom";
 import { Scroller } from "./Scroller";
+import MainView from "./ImageGallery";
 
 /* Main */
 class App extends React.PureComponent {
@@ -41,8 +42,8 @@ class App extends React.PureComponent {
 		/* Scroller images */
 		this.images = [
 			{
-				src: require("./assets/images/compressed/Hayfield.JPG"),
-				src_no_compress: require("./assets/images/default/Hayfield.JPG"),
+				src: require("./assets/images/compressed/SnowCar.JPG"),
+				src_no_compress: require("./assets/images/default/SnowCar.JPG"),
 				datum: "Unknown",
 			},
 			{
@@ -51,18 +52,13 @@ class App extends React.PureComponent {
 				datum: "Unknown",
 			},
 			{
-				src: require("./assets/images/compressed/Toadstool.JPG"),
-				src_no_compress: require("./assets/images/default/Toadstool.JPG"),
-				datum: "Unknown",
-			},
-			{
-				src: require("./assets/images/compressed/ForestWoman.JPG"),
-				src_no_compress: require("./assets/images/default/ForestWoman.JPG"),
-				datum: "Unknown",
-			},
-			{
 				src: require("./assets/images/compressed/Bee.JPG"),
 				src_no_compress: require("./assets/images/default/Bee.JPG"),
+				datum: "Unknown",
+			},
+			{
+				src: require("./assets/images/compressed/Hayfield.JPG"),
+				src_no_compress: require("./assets/images/default/Hayfield.JPG"),
 				datum: "Unknown",
 			},
 			{
@@ -71,8 +67,33 @@ class App extends React.PureComponent {
 				datum: "Unknown",
 			},
 			{
-				src: require("./assets/images/compressed/SkyOceanRain.JPG"),
-				src_no_compress: require("./assets/images/default/SkyOceanRain.JPG"),
+				src: require("./assets/images/compressed/Toadstool.JPG"),
+				src_no_compress: require("./assets/images/default/Toadstool.JPG"),
+				datum: "Unknown",
+			},
+			{
+				src: require("./assets/images/compressed/CherryBlossom.JPG"),
+				src_no_compress: require("./assets/images/default/CherryBlossom.JPG"),
+				datum: "Unknown",
+			},
+			{
+				src: require("./assets/images/compressed/Flower.JPG"),
+				src_no_compress: require("./assets/images/default/Flower.JPG"),
+				datum: "Unknown",
+			},
+			{
+				src: require("./assets/images/compressed/ForestWoman.JPG"),
+				src_no_compress: require("./assets/images/default/ForestWoman.JPG"),
+				datum: "Unknown",
+			},
+			{
+				src: require("./assets/images/compressed/SnowTree.JPG"),
+				src_no_compress: require("./assets/images/default/SnowTree.JPG"),
+				datum: "Unknown",
+			},
+			{
+				src: require("./assets/images/compressed/RedFlower.JPG"),
+				src_no_compress: require("./assets/images/default/RedFlower.JPG"),
 				datum: "Unknown",
 			},
 		];
@@ -176,21 +197,25 @@ class App extends React.PureComponent {
 					{/* The <ScaledImage /> is position: flex therefore we need an
 						extra section to compensate / add height to the page */}
 					<section className="center-container" ref={this.s1}>
-						<div className="header-box">
-							<div className="title-bg"></div>
+						<h1 className="title">
+							Hugo Sjögren
+						</h1>
+						{/* <div className="header-box"> */}
+							{/* <div className="title-bg"></div> */}
 							{/* Title / header */}
-							<h1 className="title">Hugo Sjögren</h1>
-						</div>
+							{/* <h1 className="title">Hugo Sjögren</h1> */}
+						{/* </div> */}
 					</section>
 
 					{/* Image scrolling (hugos fav images) */}
 					<section ref={this.s2} className="animated" id={this.props.id}>
-						<div className="images-container">
+						<MainView triggerImageSelect={(index) => this.triggerImageSelect(index)} images={this.images} />
+						{/* <div className="images-container">
 							<Scroller
 								images={this.images}
 								onImageClick={(index) => this.triggerImageSelect(index)}
 							/>
-						</div>
+						</div> */}
 					</section>
 
 					{/* Collections section */}
